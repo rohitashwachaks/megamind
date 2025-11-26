@@ -2,14 +2,37 @@ import { AppState } from "../types";
 
 export const seedState: AppState = {
   userName: "Learner",
-  focusCourseId: "mit-6006",
+  focusCourseId: "mit-18.S096",
   courses: [
     {
+      id: "mit-18.S096",
+      title: "18.S096 Topics In Mathematics With Applications In Finance",
+      description:
+        "Mathematical concepts and techniques used in the financial industry.",
+      source: "https://ocw.mit.edu/courses/18-s096-topics-in-mathematics-with-applications-in-finance-fall-2013/",
+      status: "active",
+      notes: "",
+      tags: ["quantitative-finance", "mathematics", "intro"],
+      lectures: [
+        {
+          id: "p1",
+          order: 1,
+          title: "Lecture 1 – Introduction, Financial Terms and Concepts",
+          videoUrl:
+            "https://ocw.mit.edu/courses/18-s096-topics-in-mathematics-with-applications-in-finance-fall-2013/resources/lecture-1-introduction-financial-terms-and-concepts/",
+          status: "not_started",
+          durationMinutes: 61,
+          note: ""
+        }
+      ],
+      assignments: []
+    },
+    {
       id: "mit-6006",
-      title: "6.006 Introduction to Algorithms (Fall 2020)",
+      title: "6.006 Introduction to Algorithms (Sprng 2008)",
       description:
         "Design and analysis of algorithms with practical problem-solving. Based on MIT OCW.",
-      source: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2020",
+      source: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2008/",
       status: "active",
       notes: "Focus course for the month. Aim for 2 lectures per week.",
       tags: ["algorithms", "computer science"],
