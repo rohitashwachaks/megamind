@@ -5,6 +5,7 @@ import App from "./App";
 import "./index.css";
 import { AppStateProvider } from "./state/AppStateContext";
 import { registerServiceWorker } from "./serviceWorkerRegistration";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const rootElement = document.getElementById("root");
 
@@ -14,11 +15,13 @@ if (!rootElement) {
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <AppStateProvider>
-        <App />
-      </AppStateProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AppStateProvider>
+          <App />
+        </AppStateProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>
 );
 

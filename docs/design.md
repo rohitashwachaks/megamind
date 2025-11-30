@@ -687,7 +687,7 @@ graph TD
 - Course Detail
 - Lecture Detail
 - Local data persistence.
-- Aim: Personal use, no accounts, no backend.
+- Aim: Personal use, no accounts, simple mongodb backend.
 
 ### Phase 2 – Sync & Cross-Device
 

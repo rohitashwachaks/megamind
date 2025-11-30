@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
@@ -9,9 +10,9 @@ from .base import DatabaseConnector
 class MongoConnector(DatabaseConnector):
     """Connector for a MongoDB database."""
 
-    def __init__(self, uri="mongodb://localhost:27017/", db_name="megamind"):
-        self.uri = uri
-        self.db_name = db_name
+    def __init__(self, uri=None, db_name=None):
+        self.uri = uri or os.getenv("MONGO_URI", "mongodb://localhost:27017/")
+        self.db_name = db_name or os.getenv("MONGO_DB_NAME", "megamind")
         self.client = None
         self.db = None
 
@@ -26,9 +27,9 @@ class MongoConnector(DatabaseConnector):
             self.client.close()
 
     def _document_to_dict(self, doc: Dict[str, Any]) -> Dict[str, Any]:
-        """Converts a MongoDB document to a dictionary, converting ObjectId to string."""
+        """Converts a MongoDB document to a dictionary, removing MongoDB's _id field."""
         if "_id" in doc:
-            doc["id"] = str(doc.pop("_id"))
+            doc.pop("_id")
         return doc
 
     def get_user(self) -> Optional[Dict[str, Any]]:
@@ -131,3 +132,21 @@ class MongoConnector(DatabaseConnector):
         )
         updated_course = self.get_course(course_id)
         return next((a for a in updated_course["assignments"] if a["id"] == assignment_id), None)
+
+    def delete_course_cascading(self, course_id: str) -> None:
+        """Delete a course and all its associated data (lectures and assignments are embedded)."""
+        self.db.courses.delete_one({"id": course_id})
+
+    def delete_lecture(self, course_id: str, lecture_id: str) -> None:
+        """Delete a lecture from a course."""
+        self.db.courses.update_one(
+            {"id": course_id},
+            {"$pull": {"lectures": {"id": lecture_id}}, "$set": {"updatedAt": self.now_iso()}},
+        )
+
+    def delete_assignment(self, course_id: str, assignment_id: str) -> None:
+        """Delete an assignment from a course."""
+        self.db.courses.update_one(
+            {"id": course_id},
+            {"$pull": {"assignments": {"id": assignment_id}}, "$set": {"updatedAt": self.now_iso()}},
+        )

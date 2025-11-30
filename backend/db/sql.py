@@ -126,3 +126,18 @@ class SqlConnector(DatabaseConnector):
         """Update an existing assignment."""
         # To be implemented
         return None
+
+    def delete_course_cascading(self, course_id: str) -> None:
+        """Delete a course and all its associated data."""
+        # To be implemented
+        pass
+
+    def delete_lecture(self, course_id: str, lecture_id: str) -> None:
+        """Delete a lecture from a course."""
+        # To be implemented
+        pass
+
+    def delete_assignment(self, course_id: str, assignment_id: str) -> None:
+        """Delete an assignment from a course."""
+        # To be implemented
+        pass

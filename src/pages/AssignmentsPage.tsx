@@ -4,7 +4,7 @@ import { AssignmentStatus } from "../types";
 import { Link } from "react-router-dom";
 
 const AssignmentsPage = () => {
-  const { state, updateAssignmentStatus, updateAssignmentNote } = useAppState();
+  const { state, updateAssignmentStatus, updateAssignmentNote, refresh } = useAppState();
   const [statusFilter, setStatusFilter] = useState<AssignmentStatus | "all">("all");
 
   const assignments = state.courses.flatMap((course) =>
@@ -20,14 +20,17 @@ const AssignmentsPage = () => {
       ? assignments
       : assignments.filter((assignment) => assignment.status === statusFilter);
 
-  if (state.isLoading) {
+  if (state.loading.isLoading) {
     return <p>Loading assignments...</p>;
   }
 
   if (state.error) {
     return (
       <div className="card">
-        <p style={{ margin: 0 }}>Failed to load assignments: {state.error}</p>
+        <p style={{ margin: "0 0 8px 0" }}>Failed to load assignments: {state.error}</p>
+        <button type="button" onClick={refresh}>
+          Retry
+        </button>
       </div>
     );
   }

@@ -1,12 +1,26 @@
+import logging
+import os
 import uuid
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional, Tuple
 
+from dotenv import load_dotenv
 from flask import Flask, g, jsonify, request
 from flask_cors import CORS
 
 from db.factory import get_db_connector
+
+# Load environment variables
+load_dotenv()
+
+# Configure logging
+logging.basicConfig(
+    level=getattr(logging, os.getenv("LOG_LEVEL", "INFO")),
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -30,20 +44,33 @@ class ApiResponse:
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+# Configure CORS with environment-based origins
+cors_origins = os.getenv("CORS_ORIGINS", "*").split(",")
+CORS(app, resources={r"/api/*": {"origins": cors_origins}})
+
+logger.info(f"CORS configured for origins: {cors_origins}")
 
 
 @app.before_request
 def before_request():
-    g.db = get_db_connector("mongo")
-    g.db.connect()
+    try:
+        db_type = os.getenv("DB_TYPE", "mongo")
+        g.db = get_db_connector(db_type)
+        g.db.connect()
+    except Exception as e:
+        logger.error(f"Failed to connect to database: {e}")
+        raise
 
 
 @app.teardown_request
 def teardown_request(exception):
     db = g.pop("db", None)
     if db is not None:
-        db.close()
+        try:
+            db.close()
+        except Exception as e:
+            logger.error(f"Error closing database connection: {e}")
 
 
 COURSE_STATUSES = {"active", "completed", "parked"}
@@ -56,7 +83,11 @@ def now_iso() -> str:
 
 
 def get_course(course_id: str) -> Optional[Dict[str, Any]]:
-    return g.db.get_course(course_id)
+    try:
+        return g.db.get_course(course_id)
+    except Exception as e:
+        logger.error(f"Error fetching course {course_id}: {e}")
+        raise
 
 
 
@@ -78,7 +109,14 @@ def health():
 
 @app.route("/api/v1/users/me", methods=["GET"])
 def get_current_user():
-  return ApiResponse(g.db.get_user()).to_flask()
+  try:
+    user = g.db.get_user()
+    if user and 'name' in user:
+      user['displayName'] = user.pop('name')
+    return ApiResponse(user).to_flask()
+  except Exception as e:
+    logger.error(f"Error fetching user: {e}")
+    return ApiResponse("Failed to fetch user", status=500, error=True, code="server_error").to_flask()
 
 
 @app.route("/api/v1/users/me", methods=["PATCH"])
@@ -92,6 +130,8 @@ def update_profile():
     return ApiResponse("displayName is required", status=400, error=True, code="invalid_fields", fields={"displayName": "required"}).to_flask()
 
   updated_user = g.db.update_user_profile(name)
+  if updated_user and 'name' in updated_user:
+    updated_user['displayName'] = updated_user.pop('name')
   return ApiResponse(updated_user).to_flask()
 
 
@@ -111,7 +151,12 @@ def set_focus_course():
 
 @app.route("/api/v1/courses", methods=["GET"])
 def list_courses():
-  return ApiResponse(g.db.get_courses()).to_flask()
+  try:
+    courses = g.db.get_courses()
+    return ApiResponse(courses).to_flask()
+  except Exception as e:
+    logger.error(f"Error fetching courses: {e}")
+    return ApiResponse("Failed to fetch courses", status=500, error=True, code="server_error").to_flask()
 
 
 def validate_course_payload(payload: Dict[str, Any], *, is_update: bool = False) -> Optional[ApiResponse]:
@@ -169,6 +214,17 @@ def get_course_detail(course_id: str):
   if not course:
     return ApiResponse("Course not found", status=404, error=True, code="course_not_found").to_flask()
   return ApiResponse(deepcopy(course)).to_flask()
+
+
+@app.route("/api/v1/courses/<course_id>", methods=["DELETE"])
+def delete_course(course_id: str):
+  """Delete a course and all its associated lectures and assignments."""
+  course = get_course(course_id)
+  if not course:
+    return ApiResponse("Course not found", status=404, error=True, code="course_not_found").to_flask()
+
+  g.db.delete_course_cascading(course_id)
+  return ApiResponse(None, status=204).to_flask()
 
 
 @app.route("/api/v1/courses/<course_id>", methods=["PATCH"])
@@ -257,6 +313,17 @@ def create_lecture(course_id: str):
   return ApiResponse(created_lecture, status=201).to_flask()
 
 
+@app.route("/api/v1/courses/<course_id>/lectures/<lecture_id>", methods=["DELETE"])
+def delete_lecture(course_id: str, lecture_id: str):
+  """Delete a lecture."""
+  course = get_course(course_id)
+  if not course:
+    return ApiResponse("Course not found", status=404, error=True, code="course_not_found").to_flask()
+
+  g.db.delete_lecture(course_id, lecture_id)
+  return ApiResponse(None, status=204).to_flask()
+
+
 @app.route("/api/v1/courses/<course_id>/lectures/<lecture_id>", methods=["PATCH"])
 def update_lecture(course_id: str, lecture_id: str):
   course = get_course(course_id)
@@ -329,6 +396,17 @@ def create_assignment(course_id: str):
   return ApiResponse(created_assignment, status=201).to_flask()
 
 
+@app.route("/api/v1/courses/<course_id>/assignments/<assignment_id>", methods=["DELETE"])
+def delete_assignment(course_id: str, assignment_id: str):
+  """Delete an assignment."""
+  course = get_course(course_id)
+  if not course:
+    return ApiResponse("Course not found", status=404, error=True, code="course_not_found").to_flask()
+
+  g.db.delete_assignment(course_id, assignment_id)
+  return ApiResponse(None, status=204).to_flask()
+
+
 @app.route("/api/v1/courses/<course_id>/assignments/<assignment_id>", methods=["PATCH"])
 def update_assignment(course_id: str, assignment_id: str):
   course = get_course(course_id)
@@ -357,4 +435,7 @@ def home():
 
 
 if __name__ == "__main__":
-  app.run(host="0.0.0.0", port=8000, debug=True)
+  port = int(os.getenv("FLASK_PORT", 8000))
+  debug = os.getenv("FLASK_ENV", "production") == "development"
+  logger.info(f"Starting Flask app on port {port} (debug={debug})")
+  app.run(host="0.0.0.0", port=port, debug=debug)

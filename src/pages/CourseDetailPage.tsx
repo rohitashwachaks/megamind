@@ -1,10 +1,11 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { apiClient } from "@/api/client";
 import { Link, useParams } from "react-router-dom";
-import { useAppState } from "../state/AppStateContext";
-import { getCourseProgress } from "../utils/progress";
-import { StatusPill } from "../components/StatusPill";
-import { ProgressBar } from "../components/ProgressBar";
-import { AssignmentStatus, CourseStatus, LectureStatus } from "../types";
+import { useAppState } from "@/state/AppStateContext";
+import { getCourseProgress } from "@/utils/progress";
+import { StatusPill } from "@/components/StatusPill";
+import { ProgressBar } from "@/components/ProgressBar";
+import { AssignmentStatus, CourseStatus, LectureStatus } from "@/types";
 
 const statusLabels: Record<CourseStatus, string> = {
   active: "In progress",
@@ -12,9 +13,17 @@ const statusLabels: Record<CourseStatus, string> = {
   parked: "Parked"
 };
 
+/**
+ * Renders the detail page for a single course.
+ * It displays the course information, lectures, and assignments.
+ * It also allows the user to update the course status, add new lectures and assignments,
+ * and delete existing lectures and assignments.
+ */
 const CourseDetailPage = () => {
   const params = useParams<{ courseId: string }>();
   const {
+    deleteLecture,
+    deleteAssignment,
     state,
     updateCourse,
     updateLectureStatus,
@@ -23,7 +32,7 @@ const CourseDetailPage = () => {
     addAssignment,
     updateAssignmentStatus
   } = useAppState();
-  const course = state.courses.find((item) => item.id === params.courseId);
+  const [course, setCourse] = useState(state.courses.find((item) => item.id === params.courseId));
 
   const [lectureTitle, setLectureTitle] = useState("");
   const [lectureUrl, setLectureUrl] = useState("");
@@ -40,11 +49,17 @@ const CourseDetailPage = () => {
     [course]
   );
 
+  /**
+   * Fetches the course details from the API when the component mounts or the course ID changes.
+   */
   useEffect(() => {
-    if (course) {
-      setNotesDraft(course.notes);
+    if (params.courseId) {
+      apiClient.getCourse(params.courseId).then(course => {
+        setCourse(course);
+        setNotesDraft(course.notes);
+      });
     }
-  }, [course?.id, course?.notes]);
+  }, [params.courseId]);
 
   useEffect(() => {
     if (course) {
@@ -167,6 +182,11 @@ const CourseDetailPage = () => {
                     <Link to={`/courses/${course.id}/lectures/${lecture.id}`} className="subtle">
                       Notes
                     </Link>
+                    <button onClick={() => {
+                      if (window.confirm('Are you sure you want to delete this lecture?')) {
+                        deleteLecture(course.id, lecture.id);
+                      }
+                    }} className="subtle text-danger">Delete</button>
                   </div>
                 </div>
                 <select
@@ -253,6 +273,11 @@ const CourseDetailPage = () => {
                       Due: {assignment.dueDate}
                     </p>
                   ) : null}
+                  <button onClick={() => {
+                      if (window.confirm('Are you sure you want to delete this assignment?')) {
+                        deleteAssignment(course.id, assignment.id);
+                      }
+                    }} className="subtle text-danger">Delete</button>
                 </div>
                 <select
                   value={assignment.status}
@@ -320,13 +345,17 @@ const CourseDetailPage = () => {
         <textarea
           value={notesDraft}
           onChange={(event) => setNotesDraft(event.target.value)}
-          onBlur={() => {
-            if (notesDraft !== course.notes) {
-              updateCourseNotes(course.id, notesDraft);
-            }
-          }}
           placeholder="Add summary notes, key references, or study reminders."
+          rows={5}
         />
+        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 8 }}>
+          <button
+            onClick={() => updateCourseNotes(course.id, notesDraft)}
+            disabled={notesDraft === course.notes}
+          >
+            Save notes
+          </button>
+        </div>
       </section>
     </>
   );

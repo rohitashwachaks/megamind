@@ -50,10 +50,16 @@ export interface Course {
   updatedAt: string;
 }
 
+export type LoadingState = {
+  isLoading: boolean;
+  action?: string;
+  message?: string;
+};
+
 export interface AppState {
   user: User | null;
   courses: Course[];
-  isLoading: boolean;
+  loading: LoadingState;
   error?: string;
 }
 

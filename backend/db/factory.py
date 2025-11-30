@@ -13,7 +13,7 @@ _connectors: Dict[str, DatabaseConnector] = {
 }
 
 
-def get_db_connector(connector_type: str = "sql") -> DatabaseConnector:
+def get_db_connector(connector_type: str = "mongo") -> DatabaseConnector:
     """Factory function to get a database connector."""
     connector = _connectors.get(connector_type)
     if not connector:

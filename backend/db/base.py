@@ -69,3 +69,18 @@ class DatabaseConnector(ABC):
     def update_assignment(self, course_id: str, assignment_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Update an existing assignment."""
         pass
+
+    @abstractmethod
+    def delete_course_cascading(self, course_id: str) -> None:
+        """Delete a course and all its associated data."""
+        pass
+
+    @abstractmethod
+    def delete_lecture(self, course_id: str, lecture_id: str) -> None:
+        """Delete a lecture from a course."""
+        pass
+
+    @abstractmethod
+    def delete_assignment(self, course_id: str, assignment_id: str) -> None:
+        """Delete an assignment from a course."""
+        pass

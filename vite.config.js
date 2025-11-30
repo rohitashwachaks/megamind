@@ -5,6 +5,14 @@ import path from "node:path";
 var __filename = fileURLToPath(import.meta.url);
 var __dirname = path.dirname(__filename);
 export default defineConfig({
+    server: {
+        proxy: {
+            "/api": {
+                target: "http://localhost:8000",
+                changeOrigin: true
+            }
+        }
+    },
     plugins: [react()],
     resolve: {
         alias: {
