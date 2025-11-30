@@ -209,3 +209,4 @@ __marimo__/
 /node_modules
 /node_modules
 /backend/data
+/.vite
