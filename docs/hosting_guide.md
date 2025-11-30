@@ -5,10 +5,27 @@ This guide walks through deploying Megamind to free/static hosts and installing 
 ## Prerequisites
 
 - Node 18+ and npm
+- Python 3.10+ and pip
+- A running MongoDB instance (the application is configured to connect to `mongodb://localhost:27017/` by default)
 - A GitHub repository (for Vercel/Netlify/GitHub Pages flows)
 - Built assets live in `dist` (`npm run build`)
 
-## 1) Build locally (all hosts)
+## 1) Backend Setup
+
+Before deploying the frontend, you need to set up and run the backend server.
+
+```bash
+# Install backend dependencies
+pip3 install -r backend/requirements.txt
+
+# Seed the database
+python3 -m backend.db.seed_mongo
+
+# Run the backend server
+python3 backend/app.py
+```
+
+## 2) Build locally (all hosts)
 
 ```bash
 npm install

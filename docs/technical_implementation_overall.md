@@ -5,7 +5,7 @@ Goal: turn the current Megamind PWA into PocketSchool, a two-tier system (React 
 ## Architecture & Responsibilities
 
 - Frontend (React + TS, Vite, PWA): routing/UI, offline-friendly cache, optimistic UX, form validation, token storage/refresh, and calling REST endpoints.
-- Backend (Flask + SQLite/Azure): authentication/authorization, REST API, course/lecture/assignment/note storage, progress calculations, and simple audit timestamps.
+- Backend (Flask): Handles authentication, authorization, and the REST API. It uses a database factory to connect to either MongoDB (default) or SQLite for data persistence.
 - Delivery: frontend builds to static assets served by CDN/host; backend exposed under `/api/v1` behind HTTPS; CORS allowed for the web origin.
 
 ## Communication Contract
@@ -54,5 +54,5 @@ Goal: turn the current Megamind PWA into PocketSchool, a two-tier system (React 
 ## Deployment Notes
 
 - Frontend: static host (Netlify/Vercel/GitHub Pages) with `/.well-known/assetlinks.json` optional for Android install.
-- Backend: Flask app containerized; SQLite for local/dev, Azure SQL/SQLite-compatible store for cloud; run behind HTTPS with CORS restricted to the frontend origin.
+- Backend: A Flask application, containerized for portability. It connects to a MongoDB or SQLite database for data persistence. It should be run behind a reverse proxy that provides HTTPS, and CORS should be restricted to the frontend origin.
 - Env config: `API_BASE_URL`, `PWA_ENABLED=true`, `TOKEN_REFRESH_THRESHOLD_MINUTES`.

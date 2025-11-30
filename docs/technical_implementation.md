@@ -1,71 +1,132 @@
-# Megamind – Technical Implementation
+# Backend Technical Implementation
 
-## Overview
+This document provides a detailed overview of the backend architecture, focusing on the database abstraction layer and the different data persistence mechanisms.
 
-Megamind is a PWA wrapper for open courses (MIT OCW-focused) with a clean split between a **React 18 + TypeScript** frontend and a lightweight **Flask** backend. The frontend keeps the dashboard/courses/lectures/assignments flows and calls REST endpoints under `/api/v1`. The backend seeds data from MIT OCW course structures and returns JSON envelopes that match `docs/rest_api_common_schemas.md`.
+## 1. High-Level Architecture
 
-Relevant references used for UX and structure live in `reference_files/links.md` (MIT OCW homepage, course search, example course layouts, and PWA documentation).
+The backend is a Flask application that serves a REST API to the frontend. It is designed to be stateless, with all application data persisted in a database. A key feature of the backend is its database abstraction layer, which allows for easy switching between different database systems.
 
-## Stack & Tooling
+```mermaid
+graph TD
+    subgraph Frontend
+        A[React PWA]
+    end
 
-- Frontend: React 18 + TypeScript, React Router 6, Vite 5 with `@vitejs/plugin-react`, service worker + `manifest.webmanifest` for PWA installability.
-- Backend: Flask 3 + `flask-cors`, simple in-memory store seeded from `backend/data/seed.json` (aligned to MIT OCW course/lecture/assignment patterns).
-- Dev server proxy: Vite proxies `/api/*` to `http://localhost:8000` so the frontend can call `/api/v1/*` without extra CORS headers during development.
+    subgraph Backend
+        B[Flask App] --> C{Database Factory};
+        C --> D[MongoConnector];
+        C --> E[SqlConnector];
+    end
 
-## Data Model (src/types.ts)
+    subgraph Databases
+        D --> F[MongoDB];
+        E --> G[SQLite];
+    end
 
-- `Course`: id, title, description, source URL, status (`active|completed|parked`), notes, lectures, assignments, tags, timestamps.
-- `Lecture`: id, courseId, order, title, videoUrl, status (`not_started|in_progress|completed`), optional duration/note, timestamps.
-- `Assignment`: id, courseId, title, status (`not_started|in_progress|submitted|skipped`), optional link/dueDate/note, timestamps.
-- `User`: id, email, displayName, optional focusCourseId, timestamps.
-
-## State & API Integration (src/state/AppStateContext.tsx)
-
-- Single React context with `useReducer`; actions cover adding/updating courses, lectures, assignments, notes, and focus course.
-- Initial load hits `GET /users/me` and `GET /courses` concurrently; errors surface in-page with retry.
-- Mutations are optimistic per action and rely on backend responses to keep local state in sync.
-- API client (`src/api/client.ts`) wraps `fetch`, handles JSON envelopes, and exposes typed methods for each resource.
-
-## Backend (backend/app.py)
-
-- Endpoints: `GET/PATCH /users/me`, `PATCH /users/me/focus-course`, `GET/POST /courses`, `GET/PATCH /courses/:id`, `POST/PATCH /courses/:id/lectures/:lectureId`, `POST/PATCH /courses/:id/assignments/:assignmentId`, plus `/health`.
-- Validation: checks URLs, enum membership for statuses, and required fields; errors return the `{ "error": {...}, "meta": { traceId } }` envelope.
-- Data: in-memory store seeded from `backend/data/seed.json`; timestamps use UTC ISO-8601. CORS is open for `/api/*` to keep local dev simple.
-
-## UI & Routing (src/App.tsx + pages)
-
-- **Dashboard**: greeting + editable display name, “Next up” card for the focus course, active courses list, and assignments snapshot.
-- **Courses**: add course form; course cards show progress, next lecture, source link, and focus toggle.
-- **Course detail**: progress bar, status selector, lecture list with quick status updates, add-lecture form, assignments list with status updates and add-assignment form, and course-level notes.
-- **Lecture detail**: per-lecture status and note-taking with a direct video link.
-- **Assignments**: cross-course view with status filtering and per-assignment reflection field.
-- **Not found**: simple fallback.
-
-## PWA & Offline
-
-- `public/manifest.webmanifest` defines names, colors, and icons.
-- `public/sw.js` caches the app shell (`/`, manifest) on install, cleans old caches on activate, and runtime-caches GET requests. Navigation falls back to cached shell when offline.
-- Registration lives in `src/serviceWorkerRegistration.ts`, invoked from `src/main.tsx`.
-
-## Running & Building
-
-```bash
-# Backend
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r backend/requirements.txt
-python backend/app.py  # serves http://localhost:8000/api/v1
-
-# Frontend
-npm install
-npm run dev            # Vite dev server; /api proxied to the backend
-npm run build          # type-check + production build
-npm run preview        # preview built app
+    A --> B;
 ```
 
-## Future Extensions
+## 2. Database Abstraction Layer
 
-- Persist backend state to SQLite or a file store instead of in-memory.
-- Add auth endpoints (login/register) and token handling when moving beyond single-user.
-- Import helpers for OCW playlist/course URLs to auto-create lecture lists.
-- Flashcards/review tab backed by existing notes data.
-- Theming toggle and a “focus mode” lecture view.
+The database abstraction layer is designed to provide a consistent interface for interacting with different database systems. It consists of three main components:
+
+- **`DatabaseConnector` (base.py)**: An abstract base class that defines the common interface for all database connectors. It includes methods for both reading and writing data.
+- **`MongoConnector` (mongo.py)**: A concrete implementation of the `DatabaseConnector` for MongoDB.
+- **`SqlConnector` (sql.py)**: A concrete implementation of the `DatabaseConnector` for SQLite.
+
+### 2.1 DatabaseConnector Interface
+
+The `DatabaseConnector` interface defines the following methods:
+
+- `connect()`: Connect to the database.
+- `close()`: Close the database connection.
+- `get_user()`: Retrieve the user.
+- `get_courses()`: Retrieve all courses.
+- `get_course(course_id)`: Retrieve a single course.
+- `update_user_profile(display_name)`: Update the user's profile.
+- `set_focus_course(course_id)`: Set the user's focus course.
+- `create_course(new_course)`: Create a new course.
+- `update_course(course_id, updates)`: Update an existing course.
+- `create_lecture(course_id, new_lecture)`: Create a new lecture.
+- `update_lecture(course_id, lecture_id, updates)`: Update an existing lecture.
+- `create_assignment(course_id, new_assignment)`: Create a new assignment.
+- `update_assignment(course_id, assignment_id, updates)`: Update an existing assignment.
+
+### 2.2 Class Diagram
+
+```mermaid
+classDiagram
+    class DatabaseConnector {
+        <<abstract>>
+        +connect()
+        +close()
+        +get_user()
+        +get_courses()
+        +get_course(course_id)
+        +update_user_profile(display_name)
+        +set_focus_course(course_id)
+        +create_course(new_course)
+        +update_course(course_id, updates)
+        +create_lecture(course_id, new_lecture)
+        +update_lecture(course_id, lecture_id, updates)
+        +create_assignment(course_id, new_assignment)
+        +update_assignment(course_id, assignment_id, updates)
+    }
+
+    class MongoConnector {
+        +connect()
+        +close()
+        +get_user()
+        +get_courses()
+        +get_course(course_id)
+        +update_user_profile(display_name)
+        +set_focus_course(course_id)
+        +create_course(new_course)
+        +update_course(course_id, updates)
+        +create_lecture(course_id, new_lecture)
+        +update_lecture(course_id, lecture_id, updates)
+        +create_assignment(course_id, new_assignment)
+        +update_assignment(course_id, assignment_id, updates)
+    }
+
+    class SqlConnector {
+        +connect()
+        +close()
+        +get_user()
+        +get_courses()
+        +get_course(course_id)
+        +update_user_profile(display_name)
+        +set_focus_course(course_id)
+        +create_course(new_course)
+        +update_course(course_id, updates)
+        +create_lecture(course_id, new_lecture)
+        +update_lecture(course_id, lecture_id, updates)
+        +create_assignment(course_id, new_assignment)
+        +update_assignment(course_id, assignment_id, updates)
+    }
+
+    DatabaseConnector <|-- MongoConnector
+    DatabaseConnector <|-- SqlConnector
+```
+
+## 3. Database Factory
+
+The database factory (`factory.py`) is a simple function that returns an instance of a database connector based on a string identifier. This allows the application to easily switch between database backends by changing a single configuration value.
+
+```python
+def get_db_connector(connector_type: str = "mongo") -> DatabaseConnector:
+    """Factory function to get a database connector."""
+    connector = _connectors.get(connector_type)
+    if not connector:
+        raise ValueError(f"Unsupported database connector type: {connector_type}")
+    return connector
+```
+
+## 4. Seeding the Database
+
+The backend includes two seed scripts:
+
+- **`seed.py`**: For populating a SQLite database.
+- **`seed_mongo.py`**: For populating a MongoDB database.
+
+These scripts read the initial data from `backend/data/seed.json` and insert it into the respective databases. The MongoDB seed script also clears any existing data in the collections before inserting the new data.

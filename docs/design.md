@@ -18,7 +18,7 @@ MIT OpenCourseWare is incredible, but:
   - See your progress across multiple courses.
   - Attach your own notes, assignment links, or reflections.
   - Build and review flashcards.
-- Mobile experience is “website-ish”, not “app-like”.
+- Mobile experience is “app-like”, not “website-ish”.
 
 **Goal:**  
 Create a **lightweight, app-like learning companion** for MIT OCW (and similar open courses) that:
@@ -616,19 +616,34 @@ This section is intentionally high-level and avoids deep technical details, whil
 
 ### 12.2 Backend & Data
 
-- Phase 1: Local-first
-- All data stored on the device (e.g., in browser storage).
-- No login; private to the device owner.
-- Zero hosting costs for data, only static hosting for the app itself.
-- Phase 2: Optional Cloud Sync
-  - Introduce a widely-used backend service that offers:
-    - Built-in authentication.
-  - A structured database.
-  - Strong community support and documentation.
-  - Criteria:
-    - Generous free tier.
-  - Mature ecosystem and tutorials.
-  - Easy integration with web apps.
+- **Backend**: A Python-based Flask server that provides a REST API for the frontend.
+- **Database**: The backend uses a factory pattern to support multiple database backends. The two currently implemented connectors are:
+  - **SQLite**: A lightweight, file-based SQL database, ideal for local development and testing.
+  - **MongoDB**: A NoSQL document database, suitable for more complex data structures and scalability.
+- **Default**: The system is configured to use MongoDB by default.
+
+```mermaid
+graph TD
+    subgraph Frontend
+        A[React PWA]
+    end
+
+    subgraph Backend
+        B[Flask App] --> C{Database Factory};
+        C --> D[MongoConnector];
+        C --> E[SqlConnector];
+    end
+
+    subgraph Databases
+        D --> F[MongoDB];
+        E --> G[SQLite];
+    end
+
+    A --> B;
+```
+
+- **Architecture**: The backend abstracts the database implementation, allowing for easy switching between database systems. The frontend interacts with a consistent REST API, regardless of the underlying database.
+- **Rationale**: This decoupled architecture centralizes data management, ensures data consistency, and simplifies both frontend and backend development. The factory pattern provides flexibility and extensibility for future database integrations.
 
 ### 12.3 Hosting & Operations
 
@@ -674,19 +689,19 @@ This section is intentionally high-level and avoids deep technical details, whil
 - Local data persistence.
 - Aim: Personal use, no accounts, no backend.
 
-Phase 2 – Sync & Cross-Device
+### Phase 2 – Sync & Cross-Device
 
 - Introduce optional login.
 - Store data centrally while still caching locally.
 - Implement backup/export options.
 
-Phase 3 – Assignments & Flashcards
+### Phase 3 – Assignments & Flashcards
 
 - Layer in assignment tracking UI.
 - Add a basic spaced repetition flow.
 - Keep interaction minimal and fun, not academic torture.
 
-Phase 4 – Polish & Public Release (Optional)
+### Phase 4 – Polish & Public Release (Optional)
 
 - Improve visuals, animations, micro-interactions.
 - Consider sharing the project as:
