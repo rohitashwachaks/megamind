@@ -1,11 +1,11 @@
 {
-  "name": "Megamind – MIT OCW Companion",
-  "short_name": "Megamind",
+  "name": "PocketSchool – MIT OCW Companion",
+  "short_name": "PocketSchool",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0d1321",
   "theme_color": "#0d1321",
-  "description": "A PWA companion for tracking MIT OCW and open courses with progress, notes, and assignments.",
+  "description": "PocketSchool is a PWA companion for tracking MIT OCW and open courses with progress, notes, and assignments.",
   "icons": [
     {
       "src": "/icons/icon-192.png",
