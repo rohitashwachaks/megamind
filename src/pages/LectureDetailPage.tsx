@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useAppState } from "../state/AppStateContext";
 import { LectureStatus } from "../types";
 
@@ -8,6 +9,23 @@ const LectureDetailPage = () => {
 
   const course = state.courses.find((item) => item.id === params.courseId);
   const lecture = course?.lectures.find((item) => item.id === params.lectureId);
+  const [noteDraft, setNoteDraft] = useState(lecture?.note ?? "");
+
+  useEffect(() => {
+    setNoteDraft(lecture?.note ?? "");
+  }, [lecture?.id, lecture?.note]);
+
+  if (state.isLoading) {
+    return <p>Loading lecture...</p>;
+  }
+
+  if (state.error) {
+    return (
+      <div className="card">
+        <p style={{ margin: 0 }}>Failed to load lecture: {state.error}</p>
+      </div>
+    );
+  }
 
   if (!course || !lecture) {
     return (
@@ -58,8 +76,13 @@ const LectureDetailPage = () => {
       <section className="card">
         <h3 style={{ margin: "0 0 10px" }}>Notes</h3>
         <textarea
-          value={lecture.note || ""}
-          onChange={(event) => updateLectureNote(course.id, lecture.id, event.target.value)}
+          value={noteDraft}
+          onChange={(event) => setNoteDraft(event.target.value)}
+          onBlur={() => {
+            if (noteDraft !== (lecture.note || "")) {
+              updateLectureNote(course.id, lecture.id, noteDraft);
+            }
+          }}
           placeholder="What did you learn? Any questions to revisit?"
         />
       </section>

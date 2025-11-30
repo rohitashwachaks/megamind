@@ -20,6 +20,18 @@ const AssignmentsPage = () => {
       ? assignments
       : assignments.filter((assignment) => assignment.status === statusFilter);
 
+  if (state.isLoading) {
+    return <p>Loading assignments...</p>;
+  }
+
+  if (state.error) {
+    return (
+      <div className="card">
+        <p style={{ margin: 0 }}>Failed to load assignments: {state.error}</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="section-header">
@@ -60,6 +72,11 @@ const AssignmentsPage = () => {
                   <a href={assignment.link} target="_blank" rel="noreferrer" className="subtle">
                     Open resource
                   </a>
+                ) : null}
+                {assignment.dueDate ? (
+                  <p className="subtle" style={{ margin: "4px 0 0" }}>
+                    Due: {assignment.dueDate}
+                  </p>
                 ) : null}
               </div>
               <select

@@ -1,10 +1,9 @@
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAppState } from "../state/AppStateContext";
 import { getCourseProgress } from "../utils/progress";
 import { StatusPill } from "../components/StatusPill";
 import { ProgressBar } from "../components/ProgressBar";
-import { createId } from "../utils/id";
 import { AssignmentStatus, CourseStatus, LectureStatus } from "../types";
 
 const statusLabels: Record<CourseStatus, string> = {
@@ -15,8 +14,15 @@ const statusLabels: Record<CourseStatus, string> = {
 
 const CourseDetailPage = () => {
   const params = useParams<{ courseId: string }>();
-  const { state, updateCourse, updateLectureStatus, addLecture, updateCourseNotes, addAssignment, updateAssignmentStatus } =
-    useAppState();
+  const {
+    state,
+    updateCourse,
+    updateLectureStatus,
+    addLecture,
+    updateCourseNotes,
+    addAssignment,
+    updateAssignmentStatus
+  } = useAppState();
   const course = state.courses.find((item) => item.id === params.courseId);
 
   const [lectureTitle, setLectureTitle] = useState("");
@@ -25,12 +31,38 @@ const CourseDetailPage = () => {
 
   const [assignmentTitle, setAssignmentTitle] = useState("");
   const [assignmentLink, setAssignmentLink] = useState("");
+  const [assignmentDueDate, setAssignmentDueDate] = useState("");
+  const [notesDraft, setNotesDraft] = useState(course?.notes ?? "");
 
   const progress = course ? getCourseProgress(course) : null;
   const sortedLectures = useMemo(
     () => (course ? [...course.lectures].sort((a, b) => a.order - b.order) : []),
     [course]
   );
+
+  useEffect(() => {
+    if (course) {
+      setNotesDraft(course.notes);
+    }
+  }, [course?.id, course?.notes]);
+
+  useEffect(() => {
+    if (course) {
+      setLectureOrder((course.lectures.length || 0) + 1);
+    }
+  }, [course?.id, course?.lectures.length]);
+
+  if (state.isLoading) {
+    return <p>Loading course...</p>;
+  }
+
+  if (state.error) {
+    return (
+      <div className="card">
+        <p style={{ margin: 0 }}>Failed to load course: {state.error}</p>
+      </div>
+    );
+  }
 
   if (!course) {
     return (
@@ -43,33 +75,31 @@ const CourseDetailPage = () => {
     );
   }
 
-  const handleAddLecture = (event: FormEvent<HTMLFormElement>) => {
+  const handleAddLecture = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!lectureTitle.trim() || !lectureUrl.trim()) return;
-    addLecture(course.id, {
-      id: createId(),
+    await addLecture(course.id, {
       title: lectureTitle.trim(),
       videoUrl: lectureUrl.trim(),
-      order: lectureOrder || course.lectures.length + 1,
-      status: "not_started"
+      order: lectureOrder || course.lectures.length + 1
     });
     setLectureTitle("");
     setLectureUrl("");
     setLectureOrder((value) => value + 1);
   };
 
-  const handleAddAssignment = (event: FormEvent<HTMLFormElement>) => {
+  const handleAddAssignment = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!assignmentTitle.trim()) return;
-    addAssignment(course.id, {
-      id: createId(),
+    await addAssignment(course.id, {
       title: assignmentTitle.trim(),
-      status: "not_started",
+      dueDate: assignmentDueDate || undefined,
       link: assignmentLink.trim(),
       note: ""
     });
     setAssignmentTitle("");
     setAssignmentLink("");
+    setAssignmentDueDate("");
   };
 
   return (
@@ -87,7 +117,7 @@ const CourseDetailPage = () => {
           <select
             id="courseStatus"
             value={course.status}
-            onChange={(event) =>
+            onChange={async (event) =>
               updateCourse(course.id, { status: event.target.value as CourseStatus })
             }
           >
@@ -218,6 +248,11 @@ const CourseDetailPage = () => {
                       Open resource
                     </a>
                   ) : null}
+                  {assignment.dueDate ? (
+                    <p className="subtle" style={{ margin: "4px 0 0" }}>
+                      Due: {assignment.dueDate}
+                    </p>
+                  ) : null}
                 </div>
                 <select
                   value={assignment.status}
@@ -264,6 +299,15 @@ const CourseDetailPage = () => {
                 placeholder="Resource URL (optional)"
               />
             </div>
+            <div>
+              <label htmlFor="assignmentDueDate">Due date</label>
+              <input
+                id="assignmentDueDate"
+                type="date"
+                value={assignmentDueDate}
+                onChange={(event) => setAssignmentDueDate(event.target.value)}
+              />
+            </div>
             <div style={{ gridColumn: "1 / -1", display: "flex", justifyContent: "flex-end" }}>
               <button type="submit">Add assignment</button>
             </div>
@@ -274,8 +318,13 @@ const CourseDetailPage = () => {
       <section className="card">
         <h3 style={{ margin: "0 0 10px" }}>Course notes</h3>
         <textarea
-          value={course.notes}
-          onChange={(event) => updateCourseNotes(course.id, event.target.value)}
+          value={notesDraft}
+          onChange={(event) => setNotesDraft(event.target.value)}
+          onBlur={() => {
+            if (notesDraft !== course.notes) {
+              updateCourseNotes(course.id, notesDraft);
+            }
+          }}
           placeholder="Add summary notes, key references, or study reminders."
         />
       </section>

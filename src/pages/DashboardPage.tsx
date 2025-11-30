@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useAppState } from "../state/AppStateContext";
 import { CourseCard } from "../components/CourseCard";
 import { getCourseProgress, getNextLecture } from "../utils/progress";
@@ -6,10 +7,31 @@ import { StatusPill } from "../components/StatusPill";
 import { ProgressBar } from "../components/ProgressBar";
 
 const DashboardPage = () => {
-  const { state, setUserName, setFocusCourse } = useAppState();
+  const { state, setDisplayName, setFocusCourse, refresh } = useAppState();
+  const [displayName, setDisplayNameInput] = useState("");
+
+  useEffect(() => {
+    setDisplayNameInput(state.user?.displayName ?? "");
+  }, [state.user?.displayName]);
+
+  if (state.isLoading) {
+    return <p>Loading your courses...</p>;
+  }
+
+  if (state.error) {
+    return (
+      <div className="card">
+        <p style={{ margin: "0 0 8px 0" }}>Failed to load data: {state.error}</p>
+        <button type="button" onClick={refresh}>
+          Retry
+        </button>
+      </div>
+    );
+  }
+
   const activeCourses = state.courses.filter((course) => course.status !== "completed");
   const focusCourse =
-    state.courses.find((course) => course.id === state.focusCourseId) ||
+    state.courses.find((course) => course.id === state.user?.focusCourseId) ||
     activeCourses[0] ||
     state.courses[0];
   const nextLecture = focusCourse ? getNextLecture(focusCourse) : undefined;
@@ -29,15 +51,20 @@ const DashboardPage = () => {
     <>
       <div className="section-header">
         <div>
-          <h1 className="page-title">Hi, {state.userName || "Learner"}</h1>
+          <h1 className="page-title">Hi, {state.user?.displayName || "Learner"}</h1>
           <p className="muted">Let&apos;s make some progress today.</p>
         </div>
         <div style={{ minWidth: 220 }}>
           <label htmlFor="displayName">Display name</label>
           <input
             id="displayName"
-            value={state.userName}
-            onChange={(event) => setUserName(event.target.value)}
+            value={displayName}
+            onChange={(event) => setDisplayNameInput(event.target.value)}
+            onBlur={() => {
+              if (displayName !== state.user?.displayName) {
+                setDisplayName(displayName);
+              }
+            }}
             placeholder="Add your name"
           />
         </div>

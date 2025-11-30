@@ -2,8 +2,6 @@ import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { CourseCard } from "../components/CourseCard";
 import { useAppState } from "../state/AppStateContext";
-import { createId } from "../utils/id";
-import { Course } from "../types";
 
 const CoursesPage = () => {
   const { state, addCourse, setFocusCourse } = useAppState();
@@ -11,25 +9,32 @@ const CoursesPage = () => {
   const [source, setSource] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleAddCourse = (event: FormEvent<HTMLFormElement>) => {
+  const handleAddCourse = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!title.trim() || !source.trim()) return;
 
-    const newCourse: Course = {
-      id: createId(),
+    const newCourse = {
       title: title.trim(),
       description: description.trim() || "New course",
-      source: source.trim(),
-      status: "active",
-      notes: "",
-      lectures: [],
-      assignments: []
+      source: source.trim()
     };
-    addCourse(newCourse);
+    await addCourse(newCourse);
     setTitle("");
     setSource("");
     setDescription("");
   };
+
+  if (state.isLoading) {
+    return <p>Loading courses...</p>;
+  }
+
+  if (state.error) {
+    return (
+      <div className="card">
+        <p style={{ margin: 0 }}>Failed to load courses: {state.error}</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -84,7 +89,7 @@ const CoursesPage = () => {
           <CourseCard
             key={course.id}
             course={course}
-            isFocus={state.focusCourseId === course.id}
+            isFocus={state.user?.focusCourseId === course.id}
             onFocus={(courseId) => setFocusCourse(courseId)}
           />
         ))}

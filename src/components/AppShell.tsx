@@ -12,8 +12,8 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
     <div className="app-shell">
       <header className="topbar">
         <div className="brand">
-          <span className="brand-mark">M</span>
-          <span>Megamind</span>
+          <span className="brand-mark">P</span>
+          <span>PocketSchool</span>
         </div>
         <nav className="nav-links">
           {navLinks.map((link) => (
