@@ -17,7 +17,7 @@ const DashboardPage = () => {
     setDisplayNameInput(state.user?.displayName ?? "");
   }, [state.user?.displayName]);
 
-  if (state.isLoading) {
+  if (state.loading.isLoading) {
     return (
       <div>
         <div className="mb-6">

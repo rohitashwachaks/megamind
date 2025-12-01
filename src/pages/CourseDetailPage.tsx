@@ -67,7 +67,7 @@ const CourseDetailPage = () => {
     }
   }, [course?.id, course?.lectures.length]);
 
-  if (state.isLoading) {
+  if (state.loading.isLoading) {
     return <p>Loading course...</p>;
   }
 
