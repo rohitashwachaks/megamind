@@ -16,8 +16,18 @@ class DatabaseConnector(ABC):
         pass
 
     @abstractmethod
-    def get_user(self) -> Optional[Dict[str, Any]]:
-        """Retrieve the user."""
+    def get_user(self, user_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """Retrieve a user by ID. If no ID provided, returns the default user (Phase 1 compatibility)."""
+        pass
+
+    @abstractmethod
+    def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
+        """Retrieve a user by email address (for authentication)."""
+        pass
+
+    @abstractmethod
+    def create_user(self, user_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a new user account (Phase 2)."""
         pass
 
     @abstractmethod

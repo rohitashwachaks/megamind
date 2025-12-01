@@ -27,12 +27,34 @@ class SqlConnector(DatabaseConnector):
         """Converts a sqlite3.Row object to a dictionary."""
         return dict(row)
 
-    def get_user(self) -> Optional[Dict[str, Any]]:
-        """Retrieve the user."""
+    def get_user(self, user_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """Retrieve a user by ID. If no ID provided, returns the first user (Phase 1 compatibility)."""
         cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM users LIMIT 1")
+        if user_id:
+            cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+        else:
+            cursor.execute("SELECT * FROM users LIMIT 1")
         user = cursor.fetchone()
         return self._row_to_dict(user) if user else None
+
+    def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
+        """Retrieve a user by email address (for authentication)."""
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+        user = cursor.fetchone()
+        return self._row_to_dict(user) if user else None
+
+    def create_user(self, user_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a new user account (Phase 2)."""
+        cursor = self.conn.cursor()
+        cursor.execute(
+            "INSERT INTO users (id, email, passwordHash, displayName, focusCourseId, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (user_data["id"], user_data["email"], user_data["passwordHash"], 
+             user_data["displayName"], user_data.get("focusCourseId"), 
+             user_data["createdAt"], user_data["updatedAt"])
+        )
+        self.conn.commit()
+        return user_data
 
     def get_courses(self) -> List[Dict[str, Any]]:
         """Retrieve all courses with their lectures and assignments."""
