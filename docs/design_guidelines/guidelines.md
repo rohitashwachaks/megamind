@@ -1,4 +1,5 @@
 # PocketSchool Design Guidelines
+
 ## A Human-First Design System
 
 **Version**: 1.0  
@@ -8,6 +9,7 @@
 ---
 
 ## Table of Contents
+
 1. [Design Philosophy](#design-philosophy)
 2. [Core Design Principles](#core-design-principles)
 3. [The Four Pillars](#the-four-pillars)
@@ -24,13 +26,16 @@
 ## Design Philosophy
 
 ### Human-First Design
+
 PocketSchool exists to empower learners. Every design decision must:
+
 - **Reduce cognitive load** - Learning is hard enough; the interface should be effortless
 - **Build confidence** - Users should feel capable and in control
 - **Celebrate progress** - Small wins matter and should be visible
 - **Respect time** - Every interaction should feel purposeful and efficient
 
 ### Design Thinking Process
+
 We follow a iterative, user-centered approach:
 
 1. **Empathize** → Understand learners' needs, frustrations, and goals
@@ -47,36 +52,42 @@ We follow a iterative, user-centered approach:
 ## Core Design Principles
 
 ### 1. **Clarity Above All**
+
 - Every element should have a clear purpose
 - Remove ambiguity in labels, actions, and feedback
 - Use plain language, not jargon
 - Visual hierarchy should guide attention naturally
 
 ### 2. **Beauty Through Restraint**
+
 - Aesthetic minimalism: focus on essentials
 - Every extra element competes for attention
 - Whitespace is a design element, not empty space
 - Quality over quantity in features and visuals
 
 ### 3. **Consistency Builds Trust**
+
 - Internal consistency within PocketSchool
 - External consistency with platform conventions (iOS, Android, Web)
 - Patterns once established should be reused
 - Jakob's Law: Users expect your site to work like others
 
 ### 4. **Accessibility is Non-Negotiable**
+
 - Perceivable: Information must be presentable to all senses
 - Operable: UI must work for all input methods
 - Understandable: Content and operation must be clear
 - Robust: Content must work across technologies
 
 ### 5. **Progressive Disclosure**
+
 - Start simple, reveal complexity when needed
 - Don't overwhelm; guide users through complexity
 - Advanced features for power users, simple path for beginners
 - Context-sensitive help over lengthy documentation
 
 ### 6. **Delight in the Details**
+
 - Micro-interactions matter (hover states, transitions, feedback)
 - Smooth animations at 60fps
 - Purposeful motion that communicates state and progress
@@ -89,54 +100,65 @@ We follow a iterative, user-centered approach:
 Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 
 ### 1. PERCEIVABLE
-**Users must be able to perceive the information being presented**
+
+**_Users must be able to perceive the information being presented_**
 
 #### Visual Design
+
 - **Color contrast ratio**: Minimum 4.5:1 for normal text, 3:1 for large text
 - **Never rely on color alone**: Use icons, labels, and patterns
 - **Text sizing**: Minimum 16px for body text, scalable up to 200%
 - **Focus indicators**: Clearly visible when navigating via keyboard
 
 #### Feedback & State
+
 - Loading states with progress indication
 - Success/error states with clear visual distinction
 - System status always visible (Heuristic #1)
 - Use of animation to draw attention without distraction
 
 ### 2. OPERABLE
-**Users must be able to operate the interface**
+
+**_Users must be able to operate the interface_**
 
 #### Navigation
+
 - **Keyboard navigation**: All functions accessible via keyboard
 - **Touch targets**: Minimum 44×44px (iOS), 48×48px (Android)
 - **Timing**: No time limits unless absolutely necessary (with warnings)
 - **Focus management**: Logical tab order, trapped focus in modals
 
 #### User Control
+
 - **Emergency exits**: Clear cancel/close buttons always available
 - **Undo/Redo**: Support for reversing actions
 - **Pause/Stop**: Control over auto-playing content
 - **Breadcrumbs**: Users always know where they are
 
 ### 3. UNDERSTANDABLE
-**Information and operation must be understandable**
+
+**_Information and operation must be understandable_**
 
 #### Content
+
 - **Plain language**: 8th-grade reading level or lower
 - **Consistent terminology**: Same words for same concepts
 - **Error messages**: What went wrong + how to fix it
 - **Instructions**: Brief, contextual, just-in-time
 
 #### Predictability
+
 - **Consistent navigation**: Same locations across pages
 - **Predictable interactions**: Buttons look like buttons
 - **Intentional changes**: Major changes require user confirmation
 - **Mental models**: Match user expectations, not system architecture
 
 ### 4. ROBUST
-**Content must work across technologies**
+
+**_Content must work across technologies_**
 
 #### Technical Quality
+
 - **Semantic HTML**: Proper heading hierarchy, ARIA labels
 - **Cross-browser support**: Chrome, Safari, Firefox, Edge
 - **Responsive design**: Mobile-first, scales to desktop
@@ -148,9 +170,11 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 ## Nielsen's 10 Usability Heuristics
 
 ### #1: Visibility of System Status
-**Always keep users informed**
+
+**_Always keep users informed_**
 
 ✅ **Good Practices**:
+
 - Loading spinners for async operations
 - Progress bars showing completion percentage
 - "Saving..." indicators with success confirmation
@@ -158,28 +182,34 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 - Assignment status pills (not started, in progress, completed)
 
 ❌ **Avoid**:
+
 - Silent failures without error messages
 - Unclear button states (is it loading or broken?)
 - No feedback after form submission
 
 ### #2: Match Between System and Real World
-**Speak the user's language**
+
+**_Speak the user's language_**
 
 ✅ **Good Practices**:
+
 - "Dashboard" not "Control Panel"
 - "Courses" not "Learning Modules"
 - Calendar metaphors for schedules
 - Book iconography for educational content
 
 ❌ **Avoid**:
+
 - Technical jargon ("API error 502")
 - Database field names as labels
 - Developer terminology in UI
 
 ### #3: User Control and Freedom
-**Provide emergency exits**
+
+**_Provide emergency exits_**
 
 ✅ **Good Practices**:
+
 - Undo for deletions
 - Cancel buttons on all forms
 - Back navigation always available
@@ -187,28 +217,34 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 - Draft saving for long-form content
 
 ❌ **Avoid**:
+
 - Irreversible actions without warning
 - Trapped in multi-step flows
 - No way to abandon in-progress tasks
 
 ### #4: Consistency and Standards
-**Don't make users guess**
+
+**_Don't make users guess_**
 
 ✅ **Good Practices**:
+
 - Primary button always blue gradient
 - Icons have consistent meanings
 - Navigation in same location across pages
 - Similar actions look similar
 
 ❌ **Avoid**:
+
 - Different words for same action
 - Inconsistent button styles
 - Random placement of common controls
 
 ### #5: Error Prevention
-**Prevent problems before they occur**
+
+**_Prevent problems before they occur_**
 
 ✅ **Good Practices**:
+
 - Form validation before submission
 - Confirmation dialogs for delete actions
 - Disabled state for unavailable actions
@@ -216,14 +252,17 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 - Inline validation with helpful suggestions
 
 ❌ **Avoid**:
+
 - Allowing invalid input
 - Unclear error messages after failure
 - No warnings for destructive actions
 
 ### #6: Recognition Rather Than Recall
-**Minimize memory load**
+
+**_Minimize memory load_**
 
 ✅ **Good Practices**:
+
 - Autocomplete for search
 - Recently viewed items
 - Visual preview of content
@@ -231,14 +270,17 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 - Inline examples in form fields
 
 ❌ **Avoid**:
+
 - Requiring users to remember codes
 - Hidden navigation requiring memory
 - Multi-page forms without summary
 
 ### #7: Flexibility and Efficiency of Use
-**Cater to novices and experts**
+
+**_Cater to novices and experts_**
 
 ✅ **Good Practices**:
+
 - Keyboard shortcuts (power users)
 - Bulk actions (select multiple)
 - Customizable dashboard layouts
@@ -246,14 +288,17 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 - Smart defaults that work for most
 
 ❌ **Avoid**:
+
 - One rigid workflow
 - No shortcuts for common tasks
 - Can't customize experience
 
 ### #8: Aesthetic and Minimalist Design
-**Every element must earn its place**
+
+**_Every element must earn its place_**
 
 ✅ **Good Practices**:
+
 - Clean, uncluttered layouts
 - Generous whitespace
 - Typography hierarchy (3 sizes max)
@@ -261,14 +306,17 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 - Progressive disclosure of complexity
 
 ❌ **Avoid**:
+
 - Information overload
 - Decorative elements that don't serve purpose
 - Cluttered interfaces with too many options
 
 ### #9: Help Users Recognize, Diagnose, and Recover from Errors
-**Clear error communication**
+
+**_Clear error communication_**
 
 ✅ **Good Practices**:
+
 - Plain language error messages
 - Red for errors, with icon
 - Specific solution suggestions
@@ -276,14 +324,17 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 - Inline error hints
 
 ❌ **Avoid**:
+
 - Error codes without explanation
 - Vague "Something went wrong"
 - No guidance on how to fix
 
 ### #10: Help and Documentation
-**When needed, make it findable**
+
+**_When needed, make it findable_**
 
 ✅ **Good Practices**:
+
 - Searchable help center
 - Contextual tooltips (? icons)
 - In-app onboarding for new features
@@ -291,6 +342,7 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 - Quick-start guides
 
 ❌ **Avoid**:
+
 - Hiding documentation
 - Requiring external resources
 - Overwhelming new users with tutorials
@@ -300,61 +352,81 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 ## Laws of UX Applied
 
 ### Aesthetic-Usability Effect
-**Beautiful design is perceived as more usable**
+
+**_Beautiful design is perceived as more usable_**
+
 - PocketSchool's gradient brand colors convey energy and growth
 - Smooth animations create perception of speed
 - Polished visuals build trust and credibility
 
 ### Hick's Law
-**More options = longer decision time**
+
+**_More options = longer decision time_**
+
 - Limit dashboard actions to 3-5 primary ones
 - Use progressive disclosure for advanced features
 - Categorize options logically
 
 ### Miller's Law
-**Average person can hold 7±2 items in working memory**
+
+**_Average person can hold 7±2 items in working memory_**
+
 - Chunk course information into digestible sections
 - Limit navigation items to 5-7
 - Break long lists into categories
 
 ### Fitts's Law
-**Larger, closer targets are easier to hit**
+
+**_Larger, closer targets are easier to hit_**
+
 - Primary buttons are large (44×44px minimum)
 - Frequently used actions placed prominently
 - Related actions grouped spatially
 
 ### Jakob's Law
-**Users prefer your site to work like others**
+
+**_Users prefer your site to work like others_**
+
 - Standard icons (hamburger menu, home, settings)
 - Common patterns (cards for content, tabs for switching)
 - Platform-native behaviors (swipe gestures on mobile)
 
 ### Law of Proximity
-**Objects near each other are perceived as related**
+
+**_Objects near each other are perceived as related_**
+
 - Group related form fields
 - Cluster course metadata (duration, lectures, assignments)
 - Separate distinct sections with whitespace
 
 ### Serial Position Effect
-**People remember first and last items best**
+
+**_People remember first and last items best_**
+
 - Most important nav items first and last
 - Key information at top and bottom of cards
 - Prioritize critical actions in prime positions
 
 ### Von Restorff Effect
-**Items that stand out are remembered**
+
+**_Items that stand out are remembered_**
+
 - Primary CTA uses bright gradient
 - Important notifications have distinct styling
 - Key metrics highlighted with color/size
 
 ### Goal-Gradient Effect
-**Motivation increases as we approach a goal**
+
+**_Motivation increases as we approach a goal_**
+
 - Progress bars show completion
 - "Almost done" messaging in onboarding
 - Visual feedback for milestones
 
 ### Peak-End Rule
-**Experiences judged by peak and end moments**
+
+**_Experiences judged by peak and end moments_**
+
 - Delight moments: success animations, achievement celebrations
 - Smooth offboarding (data export, graceful degradation)
 - Memorable first experience (onboarding)
@@ -366,12 +438,14 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 ### Level AA Compliance (Minimum Standard)
 
 #### Color & Contrast
+
 - **Normal text**: 4.5:1 contrast ratio
 - **Large text** (18pt+): 3:1 contrast ratio
 - **UI components**: 3:1 contrast ratio
 - **Never rely on color alone** for information
 
 **PocketSchool Colors (Tested)**:
+
 ```css
 /* Text on dark backgrounds */
 #e9ecf2 on #0d1321 = 11.83:1 ✅
@@ -383,6 +457,7 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 ```
 
 #### Keyboard Navigation
+
 - **Tab order**: Logical, matches visual flow
 - **Focus indicators**: Visible 2px outline
 - **Skip links**: Jump to main content
@@ -390,6 +465,7 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 - **Shortcuts**: Don't conflict with browser/screen reader
 
 #### Screen Reader Support
+
 - **Alt text**: Descriptive for all images
 - **ARIA labels**: For interactive elements
 - **Heading hierarchy**: Proper H1-H6 structure
@@ -397,12 +473,14 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 - **Live regions**: Announce dynamic content changes
 
 #### Content
+
 - **Language**: Declare page language (`<html lang="en">`)
 - **Link text**: Descriptive (not "click here")
 - **Error identification**: Clear, specific
 - **Instructions**: Don't rely solely on sensory characteristics
 
 #### Motion & Animation
+
 - **Respect preferences**: `prefers-reduced-motion`
 - **No flashing**: Nothing flashes more than 3 times/second
 - **Pauseable**: Auto-playing content can be stopped
@@ -415,6 +493,7 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 ### Color Palette
 
 #### Primary Colors
+
 ```css
 /* Brand Gradient */
 --primary-start: #4ea1ff; /* Sky Blue */
@@ -427,6 +506,7 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 ```
 
 #### Semantic Colors
+
 ```css
 /* Text */
 --text-primary: #e9ecf2;   /* Off-white - primary content */
@@ -441,6 +521,7 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 ```
 
 #### Surface Colors
+
 ```css
 /* Cards & Components */
 --surface-raised: rgba(255, 255, 255, 0.04);  /* Cards */
@@ -452,12 +533,14 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 ### Typography
 
 #### Font Family
+
 ```css
 --font-primary: 'Space Grotesk', 'SF Pro', 'Segoe UI', sans-serif;
 --font-mono: 'SF Mono', 'Consolas', monospace;
 ```
 
 #### Type Scale
+
 ```css
 --text-xs: 12px;    /* Helper text */
 --text-sm: 14px;    /* Secondary content */
@@ -470,6 +553,7 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 ```
 
 #### Line Heights
+
 ```css
 --leading-tight: 1.25;   /* Headings */
 --leading-normal: 1.5;   /* Body */
@@ -477,6 +561,7 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 ```
 
 #### Font Weights
+
 ```css
 --font-normal: 400;
 --font-medium: 500;
@@ -486,7 +571,9 @@ Based on WCAG 2.1 and Apple's HIG, our design rests on four pillars:
 ```
 
 ### Spacing System
+
 Based on 4px baseline grid:
+
 ```css
 --space-1: 4px;
 --space-2: 8px;
@@ -502,6 +589,7 @@ Based on 4px baseline grid:
 ```
 
 ### Border Radius
+
 ```css
 --radius-sm: 8px;   /* Small elements */
 --radius-md: 12px;  /* Buttons, inputs */
@@ -511,6 +599,7 @@ Based on 4px baseline grid:
 ```
 
 ### Shadows
+
 ```css
 --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
 --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -523,6 +612,7 @@ Based on 4px baseline grid:
 ```
 
 ### Animation Timings
+
 ```css
 --duration-fast: 150ms;
 --duration-normal: 250ms;
@@ -542,7 +632,9 @@ Based on 4px baseline grid:
 ### Buttons
 
 #### Primary Button
+
 **Purpose**: Main call-to-action
+
 ```css
 .button-primary {
   background: linear-gradient(135deg, #4ea1ff, #7cf29c);
@@ -564,7 +656,9 @@ Based on 4px baseline grid:
 ```
 
 #### Secondary Button
+
 **Purpose**: Alternative actions
+
 ```css
 .button-secondary {
   background: rgba(255, 255, 255, 0.08);
@@ -574,7 +668,9 @@ Based on 4px baseline grid:
 ```
 
 #### Ghost Button
+
 **Purpose**: Tertiary actions
+
 ```css
 .button-ghost {
   background: transparent;
@@ -586,6 +682,7 @@ Based on 4px baseline grid:
 ### Form Elements
 
 #### Text Input
+
 ```css
 .input {
   width: 100%;
@@ -610,6 +707,7 @@ Based on 4px baseline grid:
 ```
 
 #### Select Dropdown
+
 - Custom styling that matches input aesthetics
 - Clear dropdown indicator
 - Keyboard navigable
@@ -618,6 +716,7 @@ Based on 4px baseline grid:
 ### Cards
 
 #### Standard Card
+
 ```css
 .card {
   background: rgba(255, 255, 255, 0.04);
@@ -638,16 +737,19 @@ Based on 4px baseline grid:
 ### Loading States
 
 #### Skeleton Screens
+
 - Use for content-heavy pages
 - Maintain layout to prevent shift
 - Subtle shimmer animation
 
 #### Spinners
+
 - For button loading states
 - For small async operations
 - Sized appropriately (16px-24px)
 
 #### Progress Bars
+
 - For multi-step processes
 - Show percentage when calculable
 - Indeterminate for unknown duration
@@ -671,6 +773,7 @@ Based on 4px baseline grid:
 ```
 
 **Behavior**:
+
 - Focus trapped within modal
 - Esc key closes modal
 - Click outside closes (if non-critical)
@@ -683,12 +786,14 @@ Based on 4px baseline grid:
 ### Voice & Tone
 
 #### Brand Voice
+
 - **Encouraging**: "Great progress! Keep going."
 - **Clear**: "Save your work before leaving."
 - **Friendly**: "Welcome back! Ready to learn?"
 - **Respectful**: Never condescending or patronizing
 
 #### Tone Variations
+
 - **Success**: Celebratory but not over-the-top
 - **Error**: Helpful, not blaming
 - **Empty states**: Motivating, not sad
@@ -697,11 +802,13 @@ Based on 4px baseline grid:
 ### Microcopy Guidelines
 
 #### Button Labels
+
 - Start with verb: "Save Draft", "Delete Course", "Continue"
 - Be specific: "Add Course" not "Add"
 - Avoid gerunds: "Save" not "Saving" (use separate loading state)
 
 #### Error Messages
+
 Template: `[What happened] + [Why] + [How to fix]`
 
 ✅ Good:
@@ -711,6 +818,7 @@ Template: `[What happened] + [Why] + [How to fix]`
 > "Error 500. Please try again."
 
 #### Empty States
+
 Template: `[What this is] + [Why it's empty] + [Action to take]`
 
 ✅ Good:
@@ -732,9 +840,11 @@ Template: `[What this is] + [Why it's empty] + [Action to take]`
 ## Implementation Guidelines
 
 ### Component Checklist
+
 Before shipping any component:
 
 #### Functionality
+
 - [ ] Works without JavaScript (progressive enhancement)
 - [ ] Loading states implemented
 - [ ] Error states handled gracefully
@@ -742,6 +852,7 @@ Before shipping any component:
 - [ ] Success feedback provided
 
 #### Accessibility
+
 - [ ] Keyboard navigable (Tab, Enter, Esc, Arrow keys)
 - [ ] Focus indicators visible
 - [ ] Screen reader tested (NVDA/VoiceOver)
@@ -751,6 +862,7 @@ Before shipping any component:
 - [ ] Works with high contrast mode
 
 #### Responsive Design
+
 - [ ] Mobile (320px+)
 - [ ] Tablet (768px+)
 - [ ] Desktop (1024px+)
@@ -759,6 +871,7 @@ Before shipping any component:
 - [ ] No horizontal scroll
 
 #### Performance
+
 - [ ] < 100KB total CSS
 - [ ] Animations use transform/opacity only
 - [ ] Images optimized (WebP with fallback)
@@ -766,6 +879,7 @@ Before shipping any component:
 - [ ] Critical CSS inlined
 
 #### Browser Support
+
 - [ ] Chrome (latest 2 versions)
 - [ ] Firefox (latest 2 versions)
 - [ ] Safari (latest 2 versions)
@@ -776,6 +890,7 @@ Before shipping any component:
 ### Code Quality
 
 #### CSS Best Practices
+
 ```css
 /* ✅ Good: BEM-style naming */
 .card--elevated { }
@@ -787,6 +902,7 @@ Before shipping any component:
 ```
 
 #### Performance Animations
+
 ```css
 /* ✅ Good: GPU-accelerated */
 .card:hover {
@@ -802,7 +918,9 @@ Before shipping any component:
 ```
 
 ### Design Tokens
+
 All design values should use CSS custom properties:
+
 ```css
 /* ✅ Good */
 color: var(--text-primary);
@@ -814,7 +932,9 @@ padding: 16px;
 ```
 
 ### Documentation
+
 Each component should have:
+
 - Purpose and use cases
 - Props/API documentation
 - Accessibility notes
@@ -826,18 +946,21 @@ Each component should have:
 ## Measuring Success
 
 ### Usability Metrics
+
 - **Task Success Rate**: Can users complete core tasks?
 - **Time on Task**: How quickly can users achieve goals?
 - **Error Rate**: How often do users make mistakes?
 - **Satisfaction**: NPS or CSAT scores
 
 ### Accessibility Metrics
+
 - **WAVE errors**: 0 errors, 0 contrast errors
 - **Lighthouse score**: 100/100 accessibility
 - **Keyboard-only completion**: All tasks possible
 - **Screen reader testing**: Monthly testing with users
 
 ### Design System Adoption
+
 - **Component reuse**: % of UI using design system
 - **Consistency score**: Visual audit results
 - **Design debt**: Number of one-off patterns
@@ -847,17 +970,20 @@ Each component should have:
 ## Continuous Improvement
 
 ### Regular Audits
+
 - **Monthly**: Accessibility check (automated + manual)
 - **Quarterly**: Usability testing with 5 users
 - **Bi-annually**: Full design system review
 
 ### User Feedback Loops
+
 - In-app feedback widget
 - User interviews for major changes
 - Analytics for drop-off points
 - A/B testing for contentious decisions
 
 ### Staying Current
+
 - Follow Nielsen Norman Group research
 - Monitor WCAG updates
 - Study competitor interfaces
@@ -885,4 +1011,4 @@ PocketSchool should feel like a trusted companion—intelligent, helpful, and de
 
 ---
 
-*This document synthesizes principles from Nielsen Norman Group, Apple Human Interface Guidelines, Google Material Design, Laws of UX, and WCAG 2.1. All external principles have been adapted specifically for PocketSchool's educational context and user base.*
+_This document synthesizes principles from Nielsen Norman Group, Apple Human Interface Guidelines, Google Material Design, Laws of UX, and WCAG 2.1. All external principles have been adapted specifically for PocketSchool's educational context and user base._

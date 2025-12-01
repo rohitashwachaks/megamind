@@ -1,4 +1,5 @@
 # PocketSchool Design Guidelines
+
 ## Complete Documentation Index
 
 Welcome to the PocketSchool Design System documentation. This comprehensive guide ensures human-first design, brand cohesion, and accessibility across all touchpoints.
@@ -8,9 +9,11 @@ Welcome to the PocketSchool Design System documentation. This comprehensive guid
 ## 📚 Core Documents
 
 ### 1. [guidelines.md](./guidelines.md) ⭐ **START HERE**
-**The North Star Document**
+
+**_The North Star Document_**
 
 Complete design philosophy and principles synthesized from:
+
 - Nielsen Norman Group (10 Usability Heuristics)
 - Apple Human Interface Guidelines
 - Google Material Design
@@ -18,6 +21,7 @@ Complete design philosophy and principles synthesized from:
 - WCAG 2.1 Accessibility Standards
 
 **Contents**:
+
 - Design Philosophy & Thinking Process
 - Core Principles (Clarity, Beauty, Consistency, Accessibility)
 - The Four Pillars (Perceivable, Operable, Understandable, Robust)
@@ -31,9 +35,11 @@ Complete design philosophy and principles synthesized from:
 ---
 
 ### 2. [quick-reference.md](./quick-reference.md) 📋 **DAILY USE**
-**One-Page Cheat Sheet**
+
+**_One-Page Cheat Sheet_**
 
 Quick lookup for:
+
 - Color codes
 - Spacing values
 - Typography scale
@@ -46,9 +52,11 @@ Quick lookup for:
 ---
 
 ### 3. [responsive-design.md](./responsive-design.md) 📱 **MOBILE/TABLET**
-**Comprehensive Responsive Specification**
+
+**_Comprehensive Responsive Specification_**
 
 Detailed breakpoints and behavior:
+
 - Exact breakpoints (320px, 768px, 1024px, 1440px)
 - Responsive typography scales
 - Touch target sizing
@@ -61,9 +69,11 @@ Detailed breakpoints and behavior:
 ---
 
 ### 4. [accessibility-testing.md](./accessibility-testing.md) ♿ **QA ESSENTIAL**
-**WCAG 2.1 Testing Procedures**
+
+**_WCAG 2.1 Testing Procedures_**
 
 Step-by-step testing guides:
+
 - Automated testing (axe, WAVE, Lighthouse)
 - Keyboard navigation scripts
 - Screen reader testing (VoiceOver, NVDA)
@@ -76,9 +86,11 @@ Step-by-step testing guides:
 ---
 
 ### 5. [critique.md](./critique.md) 🔍 **REVIEW**
-**Design Guidelines Review & Critique**
+
+**_Design Guidelines Review & Critique_**
 
 Professional assessment of the guidelines:
+
 - Strengths and weaknesses
 - Areas for improvement
 - Fidelity to source material
@@ -90,9 +102,11 @@ Professional assessment of the guidelines:
 ---
 
 ### 6. [links.md](./links.md) 🔗 **RESEARCH**
-**Source Material References**
+
+**_Source Material References_**
 
 All authoritative sources consulted:
+
 - Apple HIG
 - Nielsen Norman Group
 - Material Design
@@ -106,24 +120,28 @@ All authoritative sources consulted:
 ## 🎯 How to Use This System
 
 ### For Designers
+
 1. Read [guidelines.md](./guidelines.md) completely (1 hour)
 2. Bookmark [quick-reference.md](./quick-reference.md) for daily use
 3. Reference [responsive-design.md](./responsive-design.md) when designing for mobile
 4. Use [accessibility-testing.md](./accessibility-testing.md) checklist before handoff
 
 ### For Developers
+
 1. Skim [guidelines.md](./guidelines.md) for philosophy (20 mins)
 2. Keep [quick-reference.md](./quick-reference.md) open while coding
 3. Implement responsiveness per [responsive-design.md](./responsive-design.md)
 4. Run tests from [accessibility-testing.md](./accessibility-testing.md) before PR
 
 ### For Product Managers
+
 1. Understand design philosophy from [guidelines.md](./guidelines.md)
 2. Use principles to evaluate feature proposals
 3. Ensure accessibility is prioritized using [accessibility-testing.md](./accessibility-testing.md)
 4. Reference [critique.md](./critique.md) for continuous improvement
 
 ### For QA Engineers
+
 1. Master [accessibility-testing.md](./accessibility-testing.md) procedures
 2. Use [quick-reference.md](./quick-reference.md) for expected values
 3. Test responsiveness per [responsive-design.md](./responsive-design.md) specs
@@ -134,6 +152,7 @@ All authoritative sources consulted:
 ## ✅ Implementation Checklist
 
 ### Before Starting Any Design Work
+
 - [ ] Read relevant sections of guidelines.md
 - [ ] Review existing patterns in quick-reference.md
 - [ ] Check if similar component exists
@@ -141,6 +160,7 @@ All authoritative sources consulted:
 - [ ] Plan for accessibility from start (accessibility-testing.md)
 
 ### During Design/Development
+
 - [ ] Use design tokens from quick-reference.md
 - [ ] Follow spacing system (4px grid)
 - [ ] Maintain color contrast ratios
@@ -149,6 +169,7 @@ All authoritative sources consulted:
 - [ ] Provide loading/error/empty states
 
 ### Before Shipping
+
 - [ ] Run automated accessibility tests (axe, WAVE, Lighthouse)
 - [ ] Test with keyboard only
 - [ ] Test with screen reader
@@ -162,30 +183,35 @@ All authoritative sources consulted:
 ## 🎨 Design Principles Summary
 
 ### 1. Human-First
+
 - Reduce cognitive load
 - Build confidence
 - Celebrate progress
 - Respect time
 
 ### 2. Accessibility Always
+
 - WCAG 2.1 AA minimum
 - Keyboard navigable
 - Screen reader compatible
 - High contrast
 
 ### 3. Consistency Matters
+
 - Reuse patterns
 - Follow conventions
 - Maintain brand
 - Build trust
 
 ### 4. Details Count
+
 - Smooth animations
 - Clear feedback
 - Thoughtful microcopy
 - Polished interactions
 
 ### 5. Test with Users
+
 - Regular usability testing
 - Screen reader user testing
 - Analytics-driven improvements
@@ -196,18 +222,21 @@ All authoritative sources consulted:
 ## 📊 Success Metrics
 
 ### Accessibility
+
 - **Lighthouse**: 100/100 accessibility score
 - **axe DevTools**: 0 violations
 - **WAVE**: 0 errors, 0 contrast errors
 - **Manual**: Keyboard & screen reader pass
 
 ### Usability
+
 - **Task Success Rate**: > 95%
 - **Time on Task**: < 30 seconds for core actions
 - **Error Rate**: < 5%
 - **User Satisfaction**: NPS > 50
 
 ### Performance
+
 - **First Contentful Paint**: < 1.5s
 - **Time to Interactive**: < 3.5s
 - **CSS Bundle**: < 100KB gzipped
@@ -218,18 +247,22 @@ All authoritative sources consulted:
 ## 🔄 Maintenance
 
 ### Document Updates
+
 - **Monthly**: Review for accuracy
 - **Quarterly**: Update with new learnings
 - **Annually**: Major revision with team input
 
 ### Testing Cadence
+
 - **Every PR**: Automated tests
 - **Weekly**: Manual keyboard/screen reader test
 - **Monthly**: Full accessibility audit
 - **Quarterly**: User testing sessions
 
 ### Evolution
+
 This is a living document system. As PocketSchool grows and we learn from users, these guidelines will evolve. All updates should:
+
 1. Maintain core principles
 2. Be backwards compatible when possible
 3. Be communicated to entire team
@@ -240,12 +273,14 @@ This is a living document system. As PocketSchool grows and we learn from users,
 ## 🆘 Getting Help
 
 ### Questions About Guidelines
+
 1. Check relevant document first
 2. Search for keywords
 3. Review examples in context
 4. Ask in #design Slack channel
 
 ### Proposing Changes
+
 1. Open GitHub issue with `design-system` label
 2. Provide rationale (user need, research, pain point)
 3. Include examples or mockups
@@ -253,6 +288,7 @@ This is a living document system. As PocketSchool grows and we learn from users,
 5. Update documentation after approval
 
 ### Reporting Issues
+
 - **Accessibility bugs**: Critical priority
 - **Inconsistencies**: Document in GitHub issue
 - **Missing patterns**: Request in #design channel
@@ -263,6 +299,7 @@ This is a living document system. As PocketSchool grows and we learn from users,
 ## 📖 Recommended Reading Order
 
 ### Week 1: Foundation
+
 1. Day 1: [guidelines.md](./guidelines.md) - Design Philosophy & Principles (1 hour)
 2. Day 2: [guidelines.md](./guidelines.md) - Nielsen's Heuristics (30 mins)
 3. Day 3: [guidelines.md](./guidelines.md) - Visual Design System (30 mins)
@@ -270,12 +307,14 @@ This is a living document system. As PocketSchool grows and we learn from users,
 5. Day 5: [responsive-design.md](./responsive-design.md) - Responsive Patterns (45 mins)
 
 ### Week 2: Deepening
+
 - Practice implementing components
 - Run accessibility tests
 - Review critiques
 - Explore source material
 
 ### Ongoing
+
 - Daily use of [quick-reference.md](./quick-reference.md)
 - Monthly review of updates
 - Quarterly deep-dive into new sections
@@ -285,12 +324,14 @@ This is a living document system. As PocketSchool grows and we learn from users,
 ## 🎓 Training Resources
 
 ### Internal
+
 - Design system Figma library (coming soon)
 - Component Storybook (coming soon)
 - Video tutorials (coming soon)
 - Weekly design reviews
 
 ### External
+
 - [Nielsen Norman Group Articles](https://www.nngroup.com/articles/)
 - [Laws of UX](https://lawsofux.com/)
 - [WebAIM Accessibility Guides](https://webaim.org/)
@@ -304,24 +345,28 @@ This is a living document system. As PocketSchool grows and we learn from users,
 A PocketSchool interface achieves excellence when it:
 
 ✅ **Functions flawlessly**
+
 - Works on all devices (mobile, tablet, desktop)
 - Keyboard accessible
 - Screen reader compatible
 - Fast (< 3s load time)
 
 ✅ **Looks beautiful**
+
 - Consistent with brand
 - Thoughtful typography
 - Harmonious colors
 - Polished animations
 
 ✅ **Feels intuitive**
+
 - Patterns match expectations
 - Clear visual hierarchy
 - Obvious next actions
 - Helpful feedback
 
 ✅ **Respects users**
+
 - Plain language
 - Efficient workflows
 - Forgiving errors
@@ -331,13 +376,15 @@ A PocketSchool interface achieves excellence when it:
 
 ## 📞 Contact
 
-**Design Team**
-- Email: design@pocketschool.com
+**_Design Team_**
+
+- Email: <design@pocketschool.com>
 - Slack: #design
 - GitHub: @pocketschool/design
 
-**Accessibility**
-- Email: accessibility@pocketschool.com
+**_Accessibility_**
+
+- Email: <accessibility@pocketschool.com>
 - Report issues: GitHub with `a11y` label
 
 ---
@@ -348,4 +395,4 @@ A PocketSchool interface achieves excellence when it:
 
 ---
 
-*These guidelines synthesize best practices from Nielsen Norman Group, Apple Human Interface Guidelines, Google Material Design, Laws of UX, and WCAG 2.1. They represent our commitment to human-first design that empowers learners everywhere.*
+_These guidelines synthesize best practices from Nielsen Norman Group, Apple Human Interface Guidelines, Google Material Design, Laws of UX, and WCAG 2.1. They represent our commitment to human-first design that empowers learners everywhere._

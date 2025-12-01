@@ -27,7 +27,7 @@ const CoursesPage = () => {
     setDescription("");
   };
 
-  if (state.isLoading) {
+  if (state.loading.isLoading) {
     return (
       <div>
         <div className="mb-4">

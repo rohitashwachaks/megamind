@@ -31,6 +31,7 @@ The Phase-1 implementation is **functional and well-structured**, with a clean s
 ### ⚠️ Issues & Improvements Needed
 
 #### 1. **Missing Error Handling in Database Operations**
+
 - **Issue**: MongoDB operations can fail silently. No try-catch blocks around database calls.
 - **Impact**: App could crash or return incorrect data on DB errors.
 - **Fix**: Wrap database operations in try-except blocks and return appropriate HTTP status codes.
@@ -50,10 +51,12 @@ def get_course(course_id: str):
 ```
 
 #### 2. **No Logging**
+
 - **Issue**: No logging framework configured. Debugging production issues will be difficult.
 - **Fix**: Add Python's `logging` module with different levels (INFO, ERROR, DEBUG).
 
 #### 3. **Hardcoded Configuration**
+
 - **Issue**: MongoDB URI and database name are hardcoded in `MongoConnector`.
 - **Fix**: Use environment variables with `python-decouple` or `os.getenv()`.
 
@@ -68,23 +71,28 @@ def __init__(self, uri=None, db_name=None):
 ```
 
 #### 4. **SQL Connector Not Implemented**
+
 - **Issue**: All SQL methods return None or placeholder values.
 - **Impact**: Can't switch to SQL easily despite abstraction layer.
 - **Fix**: Either implement SQL connector or remove it if not needed for Phase 1.
 
 #### 5. **No Connection Pooling**
+
 - **Issue**: Creating new MongoDB connections on every request is inefficient.
 - **Fix**: Implement connection pooling or singleton pattern for DB connector.
 
 #### 6. **Missing Data Validation**
+
 - **Issue**: No validation for nested data (lectures, assignments within courses).
 - **Fix**: Add validation for array elements when creating/updating courses.
 
 #### 7. **No Rate Limiting**
+
 - **Issue**: API endpoints are vulnerable to abuse.
 - **Fix**: Add `flask-limiter` for rate limiting.
 
 #### 8. **Missing CORS Configuration**
+
 - **Issue**: `CORS(app, resources={r"/api/*": {"origins": "*"}})` allows all origins.
 - **Security Risk**: High in production.
 - **Fix**: Configure allowed origins from environment variables.
@@ -110,6 +118,7 @@ def __init__(self, uri=None, db_name=None):
 ### ⚠️ Issues & Improvements Needed
 
 #### 1. **No Error Boundaries**
+
 - **Issue**: If a component crashes, the entire app goes down.
 - **Fix**: Implement React Error Boundaries for graceful degradation.
 
@@ -128,16 +137,19 @@ class ErrorBoundary extends React.Component {
 ```
 
 #### 2. **Inefficient Re-renders**
+
 - **Issue**: `AppStateContext` value is recreated on every render even if dependencies haven't changed.
 - **Impact**: Can cause unnecessary re-renders of all consuming components.
 - **Fix**: Already using `useMemo`, but ensure all dependencies are stable.
 
 #### 3. **No Loading States in UI**
+
 - **Issue**: While state has `loading`, it's not consistently shown in UI.
 - **Impact**: Poor UX during API calls.
 - **Fix**: Add loading spinners or skeleton screens.
 
 #### 4. **Missing Optimistic Updates**
+
 - **Issue**: All updates wait for API response before updating UI.
 - **Impact**: UI feels slow.
 - **Fix**: Update UI immediately, then rollback on error.
@@ -162,15 +174,18 @@ const updateLectureStatus = (courseId, lectureId, status) => {
 ```
 
 #### 5. **No Offline Support**
+
 - **Issue**: Service worker caches assets but app doesn't handle offline state.
 - **Fix**: Detect offline state and show appropriate UI. Queue mutations for sync.
 
 #### 6. **Missing Form Validation**
+
 - **Issue**: Forms submit without client-side validation.
 - **Impact**: Unnecessary API calls for invalid data.
 - **Fix**: Add validation before API calls.
 
 #### 7. **No Debouncing for Text Inputs**
+
 - **Issue**: Every keystroke in display name field could trigger updates.
 - **Fix**: Use debouncing for auto-save functionality.
 
@@ -182,17 +197,20 @@ const debouncedSave = useMemo(
 ```
 
 #### 8. **Accessibility Issues**
-- **Issue**: 
+
+- **Issue**:
   - Missing ARIA labels on interactive elements
   - No keyboard navigation for cards
   - Focus management not handled after modal closes
 - **Fix**: Add proper ARIA attributes and keyboard handlers.
 
 #### 9. **No Data Persistence Strategy**
+
 - **Issue**: All data is lost on page refresh if API is down.
 - **Fix**: Use IndexedDB or localStorage to cache data locally.
 
 #### 10. **Hard-coded Styles**
+
 - **Issue**: Inline styles everywhere make theming difficult.
 - **Fix**: Use CSS modules or styled-components for better organization.
 
@@ -201,16 +219,19 @@ const debouncedSave = useMemo(
 ## Architecture & Design Issues
 
 ### 1. **No Authentication/Authorization**
+
 - **Issue**: App assumes single user. No login mechanism.
 - **Impact**: Can't be multi-user.
 - **Fix**: Add JWT-based auth (for future phases).
 
 ### 2. **No Data Migration Strategy**
+
 - **Issue**: No versioning for database schema.
 - **Impact**: Upgrading will be difficult.
 - **Fix**: Add migration scripts (e.g., `Alembic` for SQL, versioned seed scripts for Mongo).
 
 ### 3. **No Testing**
+
 - **Issue**: Zero test coverage.
 - **Impact**: Refactoring is risky; bugs will slip through.
 - **Fix**: Add:
@@ -219,14 +240,17 @@ const debouncedSave = useMemo(
   - E2E: Playwright
 
 ### 4. **No CI/CD Pipeline**
+
 - **Issue**: Manual deployment process.
 - **Fix**: Add GitHub Actions for automated testing and deployment.
 
 ### 5. **No Monitoring/Analytics**
+
 - **Issue**: Can't track usage or errors in production.
 - **Fix**: Add Sentry for error tracking, basic analytics for usage.
 
 ### 6. **Environment Configuration**
+
 - **Issue**: No `.env` file or environment management.
 - **Fix**: Use `.env.example` template and `python-decouple`/`dotenv`.
 
@@ -275,12 +299,14 @@ const debouncedSave = useMemo(
 ## Priority Fixes (Ranked)
 
 ### 🔴 Critical (Must Fix Now)
+
 1. Add error handling in backend database operations
 2. Fix CORS configuration for security
 3. Add environment variable configuration
 4. Implement proper error boundaries in React
 
 ### 🟡 High Priority (Fix Soon)
+
 1. Add logging framework
 2. Implement loading states in UI
 3. Add form validation
@@ -288,6 +314,7 @@ const debouncedSave = useMemo(
 5. Implement optimistic updates
 
 ### 🟢 Medium Priority (Nice to Have)
+
 1. Add testing suite
 2. Implement offline support
 3. Add debouncing for inputs
@@ -295,6 +322,7 @@ const debouncedSave = useMemo(
 5. Add rate limiting
 
 ### 🔵 Low Priority (Future)
+
 1. Code splitting
 2. Add monitoring
 3. Improve documentation

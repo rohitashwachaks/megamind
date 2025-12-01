@@ -1,4 +1,5 @@
 # Responsive Design Specification
+
 ## PocketSchool Breakpoints & Behavior
 
 **Version**: 1.0  
@@ -9,6 +10,7 @@
 ## Breakpoints
 
 ### Mobile First Approach
+
 Design for mobile first, then progressively enhance for larger screens.
 
 ```css
@@ -104,6 +106,7 @@ Design for mobile first, then progressively enhance for larger screens.
 ### Navigation
 
 #### Mobile (< 768px)
+
 - Bottom navigation bar (reachable with thumb)
 - Hamburger menu for secondary nav
 - Floating action button for primary action
@@ -127,11 +130,13 @@ Design for mobile first, then progressively enhance for larger screens.
 ```
 
 #### Tablet (768px - 1023px)
+
 - Side navigation drawer (swipe or tap to open)
 - Top app bar with primary actions
 - Content area = 100% - nav width
 
 #### Desktop (1024px+)
+
 - Persistent left sidebar navigation
 - Top app bar with search and user menu
 - Content area centers with max-width
@@ -203,6 +208,7 @@ Design for mobile first, then progressively enhance for larger screens.
 ```
 
 ### Spacing Between Touch Targets
+
 - Minimum 8px between adjacent targets
 - Ideal 16px for comfortable tapping
 
@@ -211,6 +217,7 @@ Design for mobile first, then progressively enhance for larger screens.
 ## Mobile-Specific Patterns
 
 ### Pull to Refresh
+
 ```css
 .pull-to-refresh {
   overscroll-behavior-y: contain;
@@ -219,12 +226,14 @@ Design for mobile first, then progressively enhance for larger screens.
 ```
 
 ### Swipe Gestures
+
 - **Swipe left**: Delete item (with visual feedback)
 - **Swipe right**: Archive/complete item
 - **Swipe down**: Refresh content
 - **Pinch zoom**: Disabled for UI, enabled for images
 
 ### Bottom Sheet
+
 ```css
 .bottom-sheet {
   position: fixed;
@@ -281,6 +290,7 @@ Design for mobile first, then progressively enhance for larger screens.
 ```
 
 ### Image Sizing Guidelines
+
 - **Mobile**: Max 640px wide
 - **Tablet**: Max 1024px wide
 - **Desktop**: Max 1440px wide
@@ -319,6 +329,7 @@ Design for mobile first, then progressively enhance for larger screens.
 ## Performance Considerations
 
 ### Critical CSS
+
 Inline critical CSS for above-the-fold content:
 
 ```html
@@ -341,6 +352,7 @@ Inline critical CSS for above-the-fold content:
 ```
 
 ### Lazy Loading
+
 ```html
 <!-- Below-the-fold images -->
 <img src="thumbnail.jpg" loading="lazy" alt="..." />
@@ -354,6 +366,7 @@ Inline critical CSS for above-the-fold content:
 ## Testing Checklist
 
 ### Responsive Testing
+
 - [ ] iPhone SE (375×667) - Smallest modern phone
 - [ ] iPhone 14 Pro (393×852) - Modern iPhone
 - [ ] iPad (768×1024) - Tablet portrait
@@ -363,12 +376,14 @@ Inline critical CSS for above-the-fold content:
 - [ ] Desktop (2560×1440) - Large desktop
 
 ### Device-Specific Testing
+
 - [ ] iOS Safari (latest)
 - [ ] Android Chrome (latest)
 - [ ] Samsung Internet Browser
 - [ ] Desktop browsers (Chrome, Firefox, Safari, Edge)
 
 ### Interaction Testing
+
 - [ ] Touch gestures work smoothly
 - [ ] Hover states don't break on touch
 - [ ] Forms work with on-screen keyboard
@@ -379,7 +394,8 @@ Inline critical CSS for above-the-fold content:
 
 ## Common Pitfalls to Avoid
 
-### ❌ Don't:
+### ❌ Don't
+
 1. **Use fixed pixel widths** - Use percentages or max-width
 2. **Forget viewport meta tag** - `<meta name="viewport" content="width=device-width, initial-scale=1">`
 3. **Ignore safe areas** - iOS notch and gesture bar
@@ -391,7 +407,8 @@ Inline critical CSS for above-the-fold content:
 9. **Hard-code breakpoints in JS** - Use CSS custom properties
 10. **Test only on simulator** - Always test on real devices
 
-### ✅ Do:
+### ✅ Do
+
 1. **Mobile-first CSS** - Base styles for mobile, enhance for desktop
 2. **Use relative units** - rem, em, %, vw/vh
 3. **Test on real devices** - Simulators miss performance issues

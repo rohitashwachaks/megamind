@@ -1,4 +1,5 @@
 # Accessibility Testing Procedures
+
 ## WCAG 2.1 AA Compliance for PocketSchool
 
 **Version**: 1.0  
@@ -9,6 +10,7 @@
 ## Testing Tools
 
 ### Required Tools
+
 1. **Browser Extensions**
    - [axe DevTools](https://www.deque.com/axe/devtools/) - Automated testing
    - [WAVE](https://wave.webaim.org/extension/) - Visual feedback
@@ -65,7 +67,8 @@
 ### Testing Script
 
 #### 1. Tab Navigation
-```
+
+```text
 ✓ Tab through all interactive elements
 ✓ Tab order matches visual order (left-to-right, top-to-bottom)
 ✓ Focus indicator visible on all elements
@@ -74,7 +77,8 @@
 ```
 
 #### 2. Interactive Elements
-```
+
+```text
 ✓ Enter/Space activates buttons
 ✓ Enter submits forms
 ✓ Esc closes modals/dropdowns
@@ -83,7 +87,8 @@
 ```
 
 #### 3. Focus Management
-```
+
+```text
 ✓ Focus moves to opened modal
 ✓ Focus returns after closing modal
 ✓ Focus moves to error message after validation
@@ -111,10 +116,12 @@
 ### VoiceOver (macOS/iOS)
 
 #### Activation
+
 - **macOS**: Cmd+F5 or System Preferences → Accessibility → VoiceOver
 - **iOS**: Settings → Accessibility → VoiceOver
 
 #### Basic Commands (macOS)
+
 - **VO** = Control+Option
 - **VO + A** = Start reading
 - **VO + →** = Next item
@@ -125,7 +132,8 @@
 - **VO + U** = Rotor (navigation menu)
 
 #### Testing Checklist
-```
+
+```text
 ✓ All images have alt text or aria-label
 ✓ Form inputs announced with label
 ✓ Buttons announce action ("Save button")
@@ -140,11 +148,13 @@
 ### NVDA (Windows)
 
 #### Installation
+
 1. Download from [nvda.org](https://www.nvaccess.org/download/)
 2. Install (it's free!)
 3. Reboot computer
 
 #### Basic Commands
+
 - **NVDA** = Insert or CapsLock
 - **NVDA + Down** = Start reading
 - **↑↓←→** = Navigate
@@ -155,6 +165,7 @@
 - **NVDA + T** = Read title
 
 #### Testing Checklist
+
 (Same as VoiceOver checklist above)
 
 ---
@@ -180,12 +191,14 @@
 ### Contrast Ratio Testing
 
 #### Tools
+
 - [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
 - Chrome DevTools (inspect element → see contrast ratio)
 - WAVE extension
 
 #### Requirements
-```
+
+```text
 Normal Text (< 18pt):
 ✓ Minimum 4.5:1 (AA)
 ✓ Enhanced 7:1 (AAA) for important text
@@ -200,7 +213,8 @@ UI Components:
 ```
 
 #### PocketSchool Colors (Pre-tested)
-```
+
+```text
 ✅ #e9ecf2 on #0d1321 = 11.83:1 (AAA)
 ✅ #d6deed on #0d1321 = 10.48:1 (AAA)
 ✅ #9aa5bb on #0d1321 = 5.18:1 (AA)
@@ -213,6 +227,7 @@ UI Components:
 ## Semantic HTML Testing
 
 ### Structure Check
+
 ```html
 ✓ One <h1> per page
 ✓ Headings in logical order (no skipping levels)
@@ -223,6 +238,7 @@ UI Components:
 ```
 
 ### ARIA Labels Check
+
 ```html
 <!-- Icons without visible text -->
 <button aria-label="Close modal">
@@ -250,6 +266,7 @@ UI Components:
 ## Mobile Accessibility Testing
 
 ### iOS VoiceOver Gestures
+
 - **Single tap**: Select item
 - **Double tap**: Activate item
 - **Swipe right**: Next item
@@ -258,6 +275,7 @@ UI Components:
 - **Three-finger swipe down**: Scroll down
 
 ### Android TalkBack Gestures
+
 - **Single tap**: Announce item
 - **Double tap**: Activate item
 - **Swipe right**: Next item
@@ -265,7 +283,8 @@ UI Components:
 - **Swipe down-then-right**: Continue reading
 
 ### Mobile Testing Checklist
-```
+
+```text
 ✓ Touch targets ≥ 48×48px
 ✓ Spacing between targets ≥ 8px
 ✓ Form inputs ≥ 16px font (prevents zoom on iOS)
@@ -280,6 +299,7 @@ UI Components:
 ## Form Accessibility
 
 ### Required Elements
+
 ```html
 <form>
   <!-- Labels associated with inputs -->
@@ -305,7 +325,8 @@ UI Components:
 ```
 
 ### Form Testing Checklist
-```
+
+```text
 ✓ All inputs have visible labels
 ✓ Required fields marked (visually + aria-required)
 ✓ Error messages associated with fields
@@ -321,6 +342,7 @@ UI Components:
 ## Testing Schedule
 
 ### Before Every Release
+
 - [ ] Run axe DevTools (0 violations)
 - [ ] Run WAVE (0 errors)
 - [ ] Run Lighthouse (100/100)
@@ -328,16 +350,19 @@ UI Components:
 - [ ] Color contrast check
 
 ### Weekly
+
 - [ ] VoiceOver/NVDA testing (1 page)
 - [ ] Mobile screen reader test
 - [ ] Form accessibility review
 
 ### Monthly
+
 - [ ] Full screen reader audit (all pages)
 - [ ] User testing with assistive technology users
 - [ ] Update accessibility statement
 
 ### Quarterly
+
 - [ ] Third-party accessibility audit
 - [ ] WCAG compliance review
 - [ ] Accessibility training for team
@@ -347,6 +372,7 @@ UI Components:
 ## Common ARIA Patterns
 
 ### Modal Dialog
+
 ```html
 <div role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <h2 id="modal-title">Confirm Delete</h2>
@@ -357,6 +383,7 @@ UI Components:
 ```
 
 ### Alert
+
 ```html
 <div role="alert" aria-live="assertive">
   Error: Please fill out all required fields.
@@ -364,6 +391,7 @@ UI Components:
 ```
 
 ### Loading State
+
 ```html
 <button aria-busy="true" aria-live="polite">
   Saving...
@@ -371,6 +399,7 @@ UI Components:
 ```
 
 ### Accordion
+
 ```html
 <button 
   aria-expanded="false" 
@@ -385,6 +414,7 @@ UI Components:
 ```
 
 ### Tab Panel
+
 ```html
 <div role="tablist" aria-label="Course sections">
   <button role="tab" aria-selected="true" aria-controls="panel-lectures">
@@ -405,18 +435,20 @@ UI Components:
 ## Accessibility Statement
 
 ### Required Information
+
 1. **Conformance level**: WCAG 2.1 Level AA
-2. **Contact information**: accessibility@pocketschool.com
+2. **Contact information**: <accessibility@pocketschool.com>
 3. **Testing date**: Last tested [Date]
 4. **Known issues**: List any current limitations
 5. **Feedback mechanism**: How to report issues
 
 ### Example Statement
+>
 > PocketSchool is committed to ensuring digital accessibility for people with disabilities. We are continually improving the user experience for everyone and applying the relevant accessibility standards.
 >
 > **Conformance Status**: This website is fully conformant with WCAG 2.1 Level AA.
 >
-> **Feedback**: We welcome your feedback on the accessibility of PocketSchool. Please contact us at accessibility@pocketschool.com.
+> **Feedback**: We welcome your feedback on the accessibility of PocketSchool. Please contact us at <accessibility@pocketschool.com>.
 >
 > **Last Tested**: December 1, 2025
 
@@ -425,17 +457,20 @@ UI Components:
 ## Resources
 
 ### Official Standards
+
 - [WCAG 2.1](https://www.w3.org/TR/WCAG21/)
 - [ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)
 - [MDN Accessibility](https://developer.mozilla.org/en-US/docs/Web/Accessibility)
 
 ### Testing Tools
+
 - [axe DevTools](https://www.deque.com/axe/devtools/)
 - [WAVE](https://wave.webaim.org/)
 - [Contrast Checker](https://webaim.org/resources/contrastchecker/)
 - [HTML Validator](https://validator.w3.org/)
 
 ### Learning Resources
+
 - [WebAIM](https://webaim.org/)
 - [The A11Y Project](https://www.a11yproject.com/)
 - [Inclusive Components](https://inclusive-components.design/)

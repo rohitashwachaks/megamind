@@ -1,11 +1,13 @@
 # PocketSchool Design System Quick Reference
-**One-page cheat sheet for designers and developers**
+
+**_One-page cheat sheet for designers and developers_**
 
 ---
 
 ## 🎨 Colors
 
 ### Brand
+
 ```css
 --primary-gradient: linear-gradient(135deg, #4ea1ff, #7cf29c);
 --brand-blue: #4ea1ff;
@@ -13,6 +15,7 @@
 ```
 
 ### Text
+
 ```css
 --text-primary: #e9ecf2;     /* Main content */
 --text-secondary: #d6deed;   /* Supporting */
@@ -20,6 +23,7 @@
 ```
 
 ### Backgrounds
+
 ```css
 --bg-primary: #0d1321;       /* Page background */
 --bg-secondary: #172039;     /* Elevated surfaces */
@@ -27,6 +31,7 @@
 ```
 
 ### Semantic
+
 ```css
 --success: #7cf29c;
 --warning: #ffb347;
@@ -37,7 +42,9 @@
 ---
 
 ## 📐 Spacing
+
 **4px baseline grid**
+
 ```css
 4px  8px  12px  16px  20px  24px  32px  40px  48px  64px  80px
  1    2     3     4     5     6     8    10    12    16    20
@@ -48,11 +55,13 @@
 ## ✏️ Typography
 
 ### Font Family
+
 ```css
 font-family: 'Space Grotesk', 'SF Pro', 'Segoe UI', sans-serif;
 ```
 
 ### Scale
+
 | Size | px | Usage |
 |------|-----|-------|
 | xs   | 12px | Helper text |
@@ -64,6 +73,7 @@ font-family: 'Space Grotesk', 'SF Pro', 'Segoe UI', sans-serif;
 | 3xl  | 32px | Hero |
 
 ### Weights
+
 ```css
 400 (normal), 500 (medium), 600 (semibold), 700 (bold), 800 (extrabold)
 ```
@@ -73,6 +83,7 @@ font-family: 'Space Grotesk', 'SF Pro', 'Segoe UI', sans-serif;
 ## 🔘 Buttons
 
 ### Primary
+
 ```css
 background: linear-gradient(135deg, #4ea1ff, #7cf29c);
 color: #0d1321;
@@ -82,6 +93,7 @@ font-weight: 700;
 ```
 
 ### Secondary
+
 ```css
 background: rgba(255,255,255,0.08);
 color: #e9ecf2;
@@ -89,6 +101,7 @@ border: 1px solid rgba(255,255,255,0.12);
 ```
 
 ### Sizes
+
 - **Touch targets**: 48×48px minimum
 - **Small**: 32px height
 - **Medium**: 40px height (default)
@@ -113,6 +126,7 @@ box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 ## 🎬 Animations
 
 ### Durations
+
 ```css
 --fast: 150ms;
 --normal: 250ms;
@@ -120,12 +134,14 @@ box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 ```
 
 ### Easings
+
 ```css
 --ease-out: cubic-bezier(0, 0, 0.2, 1);
 --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 ```
 
 ### Motion Preference
+
 ```css
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; }
@@ -142,6 +158,7 @@ box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 | Tablet | 768px | 2 | 720px |
 | Desktop | 1024px | 3 | 960px |
 | Large | 1440px | 4 | 1100px |
+
 ```
 
 ---
@@ -160,6 +177,7 @@ outline-offset: 2px;
 ```
 
 ### ARIA Checklist
+
 - [ ] Alt text on images
 - [ ] Labels on form inputs
 - [ ] Heading hierarchy (H1-H6)
@@ -196,6 +214,7 @@ outline-offset: 2px;
 ## 📋 Component Checklist
 
 Before shipping:
+
 - [ ] Keyboard accessible
 - [ ] Focus visible
 - [ ] Screen reader tested
@@ -212,6 +231,7 @@ Before shipping:
 ## 💡 Quick Tips
 
 ### Do's ✅
+
 - Mobile-first design
 - Test on real devices
 - Use semantic HTML
@@ -221,6 +241,7 @@ Before shipping:
 - Use consistent patterns
 
 ### Don'ts ❌
+
 - Use color alone for meaning
 - Require memory recall
 - Trap keyboard focus

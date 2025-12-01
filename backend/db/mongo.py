@@ -91,7 +91,9 @@ class MongoConnector(DatabaseConnector):
     def create_course(self, new_course: Dict[str, Any]) -> Dict[str, Any]:
         """Create a new course."""
         self.db.courses.insert_one(new_course)
-        return new_course
+        # Return the course without MongoDB's _id field
+        created_course = self.db.courses.find_one({"id": new_course["id"]})
+        return self._document_to_dict(created_course) if created_course else new_course
 
     def update_course(self, course_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Update an existing course."""
