@@ -14,8 +14,16 @@ const DashboardPage = () => {
     setDisplayNameInput(state.user?.displayName ?? "");
   }, [state.user?.displayName]);
 
-  if (state.isLoading) {
-    return <p>Loading your courses...</p>;
+  if (state.loading.isLoading) {
+    return (
+      <div>
+        <div className="mb-6">
+          <div className="skeleton-line skeleton-line-title mb-2" style={{ width: '200px' }} />
+          <div className="skeleton-line skeleton-line-subtitle" style={{ width: '300px' }} />
+        </div>
+        <LoadingSkeleton count={3} />
+      </div>
+    );
   }
 
   if (state.error) {

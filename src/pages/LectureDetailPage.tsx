@@ -15,7 +15,7 @@ const LectureDetailPage = () => {
     setNoteDraft(lecture?.note ?? "");
   }, [lecture?.id, lecture?.note]);
 
-  if (state.isLoading) {
+  if (state.loading.isLoading) {
     return <p>Loading lecture...</p>;
   }
 

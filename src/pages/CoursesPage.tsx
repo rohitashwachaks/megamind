@@ -24,8 +24,16 @@ const CoursesPage = () => {
     setDescription("");
   };
 
-  if (state.isLoading) {
-    return <p>Loading courses...</p>;
+  if (state.loading.isLoading) {
+    return (
+      <div>
+        <div className="mb-4">
+          <div className="skeleton-line skeleton-line-title mb-2" style={{ width: '150px' }} />
+          <div className="skeleton-line skeleton-line-subtitle" style={{ width: '350px' }} />
+        </div>
+        <LoadingSkeleton count={4} />
+      </div>
+    );
   }
 
   if (state.error) {
