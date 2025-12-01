@@ -34,15 +34,37 @@ const toMessage = (error: unknown) =>
  * It automatically adds the base URL and JSON content type header.
  * @param path The API endpoint path.
  * @param options The request options.
+ * @param token Optional authentication token.
  * @returns The response payload.
  */
-const request = async <T>(path: string, options: RequestInit = {}): Promise<T> => {
+const request = async <T>(path: string, options: RequestInit = {}, token?: string | null): Promise<T> => {
   const url = path.startsWith("http") ? path : `${API_BASE_URL}${path}`;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json"
+  };
+  
+  // Add any additional headers from options
+  if (options.headers) {
+    if (options.headers instanceof Headers) {
+      options.headers.forEach((value, key) => {
+        headers[key] = value;
+      });
+    } else if (Array.isArray(options.headers)) {
+      options.headers.forEach(([key, value]) => {
+        headers[key] = value;
+      });
+    } else {
+      Object.assign(headers, options.headers);
+    }
+  }
+  
+  // Add Authorization header if token is provided
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  
   const response = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {})
-    },
+    headers,
     ...options
   });
 
@@ -63,29 +85,50 @@ const request = async <T>(path: string, options: RequestInit = {}): Promise<T> =
 
 export const apiClient = {
   /**
+   * Register a new user account.
+   */
+  register: (email: string, password: string, displayName?: string) =>
+    request<{ user: User; token: string }>("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ email, password, displayName })
+    }),
+  /**
+   * Login with email and password.
+   */
+  login: (email: string, password: string) =>
+    request<{ user: User; token: string }>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password })
+    }),
+  /**
    * Fetches the current user's profile.
    */
-  getCurrentUser: () => request<User>("/users/me"),
+  getCurrentUser: (token?: string | null) => request<User>("/users/me", {}, token),
   /**
    * Updates the current user's display name.
    */
-  updateProfile: (payload: { displayName: string }) =>
+  updateProfile: (payload: { displayName: string }, token?: string | null) =>
     request<User>("/users/me", {
       method: "PATCH",
       body: JSON.stringify(payload)
-    }),
+    }, token),
   /**
    * Sets the user's focus course.
    */
-  setFocusCourse: (courseId?: string | null) =>
+  setFocusCourse: (courseId?: string | null, token?: string | null) =>
     request<User>("/users/me/focus-course", {
       method: "PATCH",
       body: JSON.stringify({ courseId: courseId ?? null })
-    }),
+    }, token),
+  /**
+   * Export all user data for backup.
+   */
+  exportUserData: (token?: string | null) =>
+    request<{ user: User; courses: Course[]; exportedAt: string; version: string }>("/users/me/export", {}, token),
   /**
    * Fetches all courses.
    */
-  getCourses: () => request<Course[]>("/courses"),
+  getCourses: (token?: string | null) => request<Course[]>("/courses", {}, token),
   /**
    * Fetches a single course by its ID.
    */

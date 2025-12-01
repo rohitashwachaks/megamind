@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import { AppStateProvider } from "./state/AppStateContext";
+import { AuthProvider } from "./auth/AuthContext";
 import { registerServiceWorker } from "./serviceWorkerRegistration";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
@@ -17,9 +18,11 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ErrorBoundary>
       <BrowserRouter>
-        <AppStateProvider>
-          <App />
-        </AppStateProvider>
+        <AuthProvider>
+          <AppStateProvider>
+            <App />
+          </AppStateProvider>
+        </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>
   </React.StrictMode>

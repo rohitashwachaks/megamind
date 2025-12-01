@@ -32,10 +32,24 @@ class MongoConnector(DatabaseConnector):
             doc.pop("_id")
         return doc
 
-    def get_user(self) -> Optional[Dict[str, Any]]:
-        """Retrieve the user."""
-        user = self.db.users.find_one()
+    def get_user(self, user_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """Retrieve a user by ID. If no ID provided, returns the first user (Phase 1 compatibility)."""
+        if user_id:
+            user = self.db.users.find_one({"id": user_id})
+        else:
+            # Phase 1 compatibility: return first user
+            user = self.db.users.find_one()
         return self._document_to_dict(user) if user else None
+
+    def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
+        """Retrieve a user by email address (for authentication)."""
+        user = self.db.users.find_one({"email": email})
+        return self._document_to_dict(user) if user else None
+
+    def create_user(self, user_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a new user account (Phase 2)."""
+        self.db.users.insert_one(user_data)
+        return self._document_to_dict(user_data)
 
     def get_courses(self) -> List[Dict[str, Any]]:
         """Retrieve all courses."""

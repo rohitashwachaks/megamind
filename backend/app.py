@@ -6,9 +6,12 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional, Tuple
 
+import bleach
 from dotenv import load_dotenv
 from flask import Flask, g, jsonify, request
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from db.factory import get_db_connector
 
@@ -50,6 +53,16 @@ cors_origins = os.getenv("CORS_ORIGINS", "*").split(",")
 CORS(app, resources={r"/api/*": {"origins": cors_origins}})
 
 logger.info(f"CORS configured for origins: {cors_origins}")
+
+# Configure rate limiting
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=[os.getenv("RATE_LIMIT", "200 per day, 50 per hour")],
+    storage_uri=os.getenv("RATE_LIMIT_STORAGE", "memory://")
+)
+
+logger.info("Rate limiting configured")
 
 
 @app.before_request
@@ -95,6 +108,29 @@ def validate_url(value: str) -> bool:
   return isinstance(value, str) and value.startswith(("http://", "https://"))
 
 
+def sanitize_html(text: str, allow_tags: list = None) -> str:
+  """
+  Sanitize HTML content to prevent XSS attacks.
+  By default, strips all HTML tags. Pass allow_tags for basic formatting.
+  """
+  if not text or not isinstance(text, str):
+    return text
+  
+  if allow_tags is None:
+    # For notes, allow basic formatting tags
+    allow_tags = ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'a']
+  
+  allowed_attrs = {'a': ['href', 'title']}
+  return bleach.clean(text, tags=allow_tags, attributes=allowed_attrs, strip=True)
+
+
+def sanitize_text(text: str) -> str:
+  """Sanitize plain text fields (titles, names, etc.) - strips all HTML."""
+  if not text or not isinstance(text, str):
+    return text
+  return bleach.clean(text, tags=[], strip=True)
+
+
 def parse_json() -> Tuple[Dict[str, Any], Optional[ApiResponse]]:
   try:
     return request.get_json(force=True) or {}, None
@@ -106,6 +142,105 @@ def parse_json() -> Tuple[Dict[str, Any], Optional[ApiResponse]]:
 def health():
   return ApiResponse({"status": "ok"}).to_flask()
 
+
+# =============================================================================
+# Authentication Routes (Phase 2)
+# =============================================================================
+
+@app.route("/api/v1/auth/register", methods=["POST"])
+@limiter.limit("10 per hour")
+def register():
+  """Register a new user account."""
+  from auth import hash_password, generate_token
+  
+  payload, error = parse_json()
+  if error:
+    return error.to_flask()
+  
+  # Validate input
+  email = payload.get("email")
+  password = payload.get("password")
+  display_name = payload.get("displayName", "")
+  
+  fields = {}
+  if not email or not isinstance(email, str) or "@" not in email:
+    fields["email"] = "valid email required"
+  if not password or not isinstance(password, str) or len(password) < 8:
+    fields["password"] = "minimum 8 characters required"
+  
+  if fields:
+    return ApiResponse("Invalid registration data", status=400, error=True, code="invalid_fields", fields=fields).to_flask()
+  
+  # Check if user already exists
+  existing_user = g.db.get_user_by_email(email)
+  if existing_user:
+    return ApiResponse("Email already registered", status=409, error=True, code="email_exists").to_flask()
+  
+  # Create new user
+  created_at = now_iso()
+  user_data = {
+    "id": str(uuid.uuid4()),
+    "email": sanitize_text(email.lower()),
+    "passwordHash": hash_password(password),
+    "displayName": sanitize_text(display_name) or email.split("@")[0],
+    "focusCourseId": None,
+    "createdAt": created_at,
+    "updatedAt": created_at
+  }
+  
+  try:
+    created_user = g.db.create_user(user_data)
+    # Generate token
+    token = generate_token(created_user["id"])
+    
+    # Remove password hash from response
+    created_user.pop("passwordHash", None)
+    
+    return ApiResponse({
+      "user": created_user,
+      "token": token
+    }, status=201).to_flask()
+  except Exception as e:
+    logger.error(f"Error creating user: {e}")
+    return ApiResponse("Failed to create user", status=500, error=True, code="server_error").to_flask()
+
+
+@app.route("/api/v1/auth/login", methods=["POST"])
+@limiter.limit("20 per hour")
+def login():
+  """Login with email and password."""
+  from auth import verify_password, generate_token
+  
+  payload, error = parse_json()
+  if error:
+    return error.to_flask()
+  
+  email = payload.get("email")
+  password = payload.get("password")
+  
+  if not email or not password:
+    return ApiResponse("Email and password required", status=400, error=True, code="invalid_credentials").to_flask()
+  
+  # Find user
+  user = g.db.get_user_by_email(email.lower())
+  if not user or not verify_password(password, user.get("passwordHash", "")):
+    return ApiResponse("Invalid email or password", status=401, error=True, code="invalid_credentials").to_flask()
+  
+  # Generate token
+  token = generate_token(user["id"])
+  
+  # Remove password hash from response
+  user.pop("passwordHash", None)
+  
+  return ApiResponse({
+    "user": user,
+    "token": token
+  }).to_flask()
+
+
+# =============================================================================
+# User Routes
+# =============================================================================
 
 @app.route("/api/v1/users/me", methods=["GET"])
 def get_current_user():
@@ -129,6 +264,8 @@ def update_profile():
   if not name or not isinstance(name, str):
     return ApiResponse("displayName is required", status=400, error=True, code="invalid_fields", fields={"displayName": "required"}).to_flask()
 
+  # Sanitize user input
+  name = sanitize_text(name)
   updated_user = g.db.update_user_profile(name)
   if updated_user and 'name' in updated_user:
     updated_user['displayName'] = updated_user.pop('name')
@@ -148,6 +285,36 @@ def set_focus_course():
   updated_user = g.db.set_focus_course(course_id)
   return ApiResponse(updated_user).to_flask()
 
+
+@app.route("/api/v1/users/me/export", methods=["GET"])
+def export_user_data():
+  """Export all user data as JSON for backup (Phase 2)."""
+  try:
+    user = g.db.get_user()
+    if not user:
+      return ApiResponse("User not found", status=404, error=True, code="user_not_found").to_flask()
+    
+    courses = g.db.get_courses()
+    
+    # Remove password hash from user data
+    user.pop("passwordHash", None)
+    
+    export_data = {
+      "user": user,
+      "courses": courses,
+      "exportedAt": now_iso(),
+      "version": "1.0"
+    }
+    
+    return ApiResponse(export_data).to_flask()
+  except Exception as e:
+    logger.error(f"Error exporting user data: {e}")
+    return ApiResponse("Failed to export data", status=500, error=True, code="server_error").to_flask()
+
+
+# =============================================================================
+# Course Routes
+# =============================================================================
 
 @app.route("/api/v1/courses", methods=["GET"])
 def list_courses():
@@ -190,15 +357,16 @@ def create_course():
   if validation_error:
     return validation_error.to_flask()
 
+  # Sanitize text inputs
   created_at = now_iso()
   new_course = {
     "id": str(uuid.uuid4()),
-    "title": payload["title"],
-    "description": payload.get("description", ""),
-    "source": payload["source"],
+    "title": sanitize_text(payload["title"]),
+    "description": sanitize_text(payload.get("description", "")),
+    "source": payload["source"],  # URLs are validated, not sanitized
     "status": "active",
-    "notes": payload.get("notes", ""),
-    "tags": payload.get("tags", []),
+    "notes": sanitize_html(payload.get("notes", "")),
+    "tags": [sanitize_text(tag) for tag in payload.get("tags", [])],
     "lectures": [],
     "assignments": [],
     "createdAt": created_at,
@@ -244,7 +412,15 @@ def update_course(course_id: str):
   updates = {}
   for field in ("title", "description", "source", "status", "notes", "tags"):
       if field in payload:
-          updates[field] = payload[field]
+          # Sanitize text inputs
+          if field in ("title", "description"):
+              updates[field] = sanitize_text(payload[field])
+          elif field == "notes":
+              updates[field] = sanitize_html(payload[field])
+          elif field == "tags":
+              updates[field] = [sanitize_text(tag) for tag in payload[field]]
+          else:
+              updates[field] = payload[field]
   updated_course = g.db.update_course(course_id, updates)
   return ApiResponse(updated_course).to_flask()
 
@@ -296,16 +472,17 @@ def create_lecture(course_id: str):
   if validation_error:
     return validation_error.to_flask()
 
+  # Sanitize text inputs
   created_at = now_iso()
   lecture = {
     "id": str(uuid.uuid4()),
     "courseId": course_id,
-    "title": payload["title"],
+    "title": sanitize_text(payload["title"]),
     "order": int(payload["order"]),
-    "videoUrl": payload["videoUrl"],
+    "videoUrl": payload["videoUrl"],  # URLs are validated
     "status": payload.get("status", "not_started"),
     "durationMinutes": payload.get("durationMinutes"),
-    "note": payload.get("note", ""),
+    "note": sanitize_html(payload.get("note", "")),
     "createdAt": created_at,
     "updatedAt": created_at
   }
@@ -342,7 +519,13 @@ def update_lecture(course_id: str, lecture_id: str):
   updates = {}
   for field in ("title", "videoUrl", "note", "order", "durationMinutes", "status"):
       if field in payload:
-          updates[field] = payload[field]
+          # Sanitize text inputs
+          if field == "title":
+              updates[field] = sanitize_text(payload[field])
+          elif field == "note":
+              updates[field] = sanitize_html(payload[field])
+          else:
+              updates[field] = payload[field]
   updated_lecture = g.db.update_lecture(course_id, lecture_id, updates)
   return ApiResponse(updated_lecture).to_flask()
 
@@ -380,15 +563,16 @@ def create_assignment(course_id: str):
   if validation_error:
     return validation_error.to_flask()
 
+  # Sanitize text inputs
   created_at = now_iso()
   assignment = {
     "id": str(uuid.uuid4()),
     "courseId": course_id,
-    "title": payload["title"],
+    "title": sanitize_text(payload["title"]),
     "status": payload.get("status", "not_started"),
     "dueDate": payload.get("dueDate"),
-    "link": payload.get("link"),
-    "note": payload.get("note", ""),
+    "link": payload.get("link"),  # URLs are validated if present
+    "note": sanitize_html(payload.get("note", "")),
     "createdAt": created_at,
     "updatedAt": created_at
   }
@@ -425,7 +609,13 @@ def update_assignment(course_id: str, assignment_id: str):
   updates = {}
   for field in ("title", "dueDate", "link", "note", "status"):
       if field in payload:
-          updates[field] = payload[field]
+          # Sanitize text inputs
+          if field == "title":
+              updates[field] = sanitize_text(payload[field])
+          elif field == "note":
+              updates[field] = sanitize_html(payload[field])
+          else:
+              updates[field] = payload[field]
   updated_assignment = g.db.update_assignment(course_id, assignment_id, updates)
   return ApiResponse(updated_assignment).to_flask()
 

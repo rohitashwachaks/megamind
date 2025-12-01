@@ -1,4 +1,4 @@
-const CACHE_NAME = "megamind-cache-v1";
+const CACHE_NAME = "pocketschool-cache-v1";
 const CORE_ASSETS = ["/", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
