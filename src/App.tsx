@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
+import LandingPage from "./pages/LandingPage";
 import DashboardPage from "./pages/DashboardPage";
 import CoursesPage from "./pages/CoursesPage";
 import CourseDetailPage from "./pages/CourseDetailPage";
@@ -12,13 +13,14 @@ const App = () => {
   return (
     <Routes>
       {/* Public routes (no AppShell) */}
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       
       {/* Protected routes (with AppShell) */}
       <Route path="/*" element={
         <AppShell>
           <Routes>
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/courses/:courseId" element={<CourseDetailPage />} />
             <Route path="/courses/:courseId/lectures/:lectureId" element={<LectureDetailPage />} />

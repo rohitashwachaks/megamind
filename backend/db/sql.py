@@ -109,12 +109,12 @@ class SqlConnector(DatabaseConnector):
     def now_iso(self) -> str:
         return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
-    def update_user_profile(self, display_name: str) -> Optional[Dict[str, Any]]:
+    def update_user_profile(self, user_id: str, display_name: str) -> Optional[Dict[str, Any]]:
         """Update the user's profile."""
         # To be implemented
         return None
 
-    def set_focus_course(self, course_id: Optional[str]) -> Optional[Dict[str, Any]]:
+    def set_focus_course(self, user_id: str, course_id: Optional[str]) -> Optional[Dict[str, Any]]:
         """Set the user's focus course."""
         # To be implemented
         return None
@@ -163,3 +163,44 @@ class SqlConnector(DatabaseConnector):
         """Delete an assignment from a course."""
         # To be implemented
         pass
+
+    # UserCourseData methods (to be implemented for SQL)
+    def get_user_course_data(self, user_id: str, course_id: str) -> Optional[Dict[str, Any]]:
+        """Get user-specific data for a course."""
+        # To be implemented
+        return None
+
+    def get_all_user_course_data(self, user_id: str) -> List[Dict[str, Any]]:
+        """Get all user course data for a specific user."""
+        # To be implemented
+        return []
+
+    def create_user_course_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create user course enrollment data."""
+        # To be implemented
+        return data
+
+    def update_user_course_data(self, user_id: str, course_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Update user-specific course data."""
+        # To be implemented
+        return None
+
+    def update_user_lecture_data(self, user_id: str, course_id: str, lecture_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Update user-specific lecture data (status, notes)."""
+        # To be implemented
+        return None
+
+    def update_user_assignment_data(self, user_id: str, course_id: str, assignment_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Update user-specific assignment data (status, notes, due date)."""
+        # To be implemented
+        return None
+
+    def delete_user_course_data(self, user_id: str, course_id: str) -> None:
+        """Delete user course data (unenroll)."""
+        # To be implemented
+        pass
+
+    def get_enriched_courses(self, user_id: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Get courses enriched with user data if user_id provided, otherwise return catalog only."""
+        # To be implemented - for now, just return basic courses
+        return self.get_courses()

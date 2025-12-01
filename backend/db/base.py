@@ -32,21 +32,21 @@ class DatabaseConnector(ABC):
 
     @abstractmethod
     def get_courses(self) -> List[Dict[str, Any]]:
-        """Retrieve all courses."""
+        """Retrieve all courses from the catalog (public data)."""
         pass
 
     @abstractmethod
     def get_course(self, course_id: str) -> Optional[Dict[str, Any]]:
-        """Retrieve a single course by its ID."""
+        """Retrieve a single course by its ID from the catalog (public data)."""
         pass
 
     @abstractmethod
-    def update_user_profile(self, display_name: str) -> Optional[Dict[str, Any]]:
+    def update_user_profile(self, user_id: str, display_name: str) -> Optional[Dict[str, Any]]:
         """Update the user's profile."""
         pass
 
     @abstractmethod
-    def set_focus_course(self, course_id: Optional[str]) -> Optional[Dict[str, Any]]:
+    def set_focus_course(self, user_id: str, course_id: Optional[str]) -> Optional[Dict[str, Any]]:
         """Set the user's focus course."""
         pass
 
@@ -93,4 +93,45 @@ class DatabaseConnector(ABC):
     @abstractmethod
     def delete_assignment(self, course_id: str, assignment_id: str) -> None:
         """Delete an assignment from a course."""
+        pass
+
+    # UserCourseData methods
+    @abstractmethod
+    def get_user_course_data(self, user_id: str, course_id: str) -> Optional[Dict[str, Any]]:
+        """Get user-specific data for a course."""
+        pass
+
+    @abstractmethod
+    def get_all_user_course_data(self, user_id: str) -> List[Dict[str, Any]]:
+        """Get all user course data for a specific user."""
+        pass
+
+    @abstractmethod
+    def create_user_course_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create user course enrollment data."""
+        pass
+
+    @abstractmethod
+    def update_user_course_data(self, user_id: str, course_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Update user-specific course data."""
+        pass
+
+    @abstractmethod
+    def update_user_lecture_data(self, user_id: str, course_id: str, lecture_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Update user-specific lecture data (status, notes)."""
+        pass
+
+    @abstractmethod
+    def update_user_assignment_data(self, user_id: str, course_id: str, assignment_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Update user-specific assignment data (status, notes, due date)."""
+        pass
+
+    @abstractmethod
+    def delete_user_course_data(self, user_id: str, course_id: str) -> None:
+        """Delete user course data (unenroll)."""
+        pass
+
+    @abstractmethod
+    def get_enriched_courses(self, user_id: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Get courses enriched with user data if user_id provided, otherwise return catalog only."""
         pass

@@ -1,14 +1,23 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { ReactNode } from "react";
 import { BottomNav } from "./BottomNav";
+import { useAuth } from "../auth/AuthContext";
 
 const navLinks = [
-  { to: "/", label: "Dashboard", ariaLabel: "Go to Dashboard" },
+  { to: "/dashboard", label: "Dashboard", ariaLabel: "Go to Dashboard" },
   { to: "/courses", label: "Courses", ariaLabel: "View all courses" },
   { to: "/assignments", label: "Assignments", ariaLabel: "View assignments" }
 ];
 
 export const AppShell = ({ children }: { children: ReactNode }) => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <div className="app-shell">
       <a href="#main-content" className="skip-link">
@@ -31,12 +40,17 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
               key={link.to}
               to={link.to}
               className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
-              end={link.to === "/"}
+              end={link.to === "/dashboard"}
               aria-label={link.ariaLabel}
             >
               {link.label}
             </NavLink>
           ))}
+          {user && (
+            <button onClick={handleLogout} className="nav-link logout-btn" aria-label="Logout">
+              Logout
+            </button>
+          )}
         </nav>
       </header>
       

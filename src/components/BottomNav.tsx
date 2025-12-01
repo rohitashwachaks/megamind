@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 const navItems = [
-  { to: "/", label: "Dashboard", icon: "🏠", ariaLabel: "Go to Dashboard" },
+  { to: "/dashboard", label: "Dashboard", icon: "🏠", ariaLabel: "Go to Dashboard" },
   { to: "/courses", label: "Courses", icon: "📚", ariaLabel: "View all courses" },
   { to: "/assignments", label: "Tasks", icon: "📝", ariaLabel: "View assignments" }
 ];
@@ -14,7 +14,7 @@ export const BottomNav = () => {
           key={item.to}
           to={item.to}
           className={({ isActive }) => `bottom-nav-item${isActive ? " active" : ""}`}
-          end={item.to === "/"}
+          end={item.to === "/dashboard"}
           aria-label={item.ariaLabel}
         >
           <span className="bottom-nav-icon" aria-hidden="true">{item.icon}</span>
