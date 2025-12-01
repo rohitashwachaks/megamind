@@ -15,7 +15,7 @@ def main():
         data = json.load(seed_file)
 
     client = MongoClient("mongodb://localhost:27017/")
-    db = client.megamind
+    db = client.pocketschool
 
     # Clear existing data
     db.users.delete_many({})
