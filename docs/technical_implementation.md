@@ -129,4 +129,4 @@ The backend includes two seed scripts:
 - **`seed.py`**: For populating a SQLite database.
 - **`seed_mongo.py`**: For populating a MongoDB database.
 
-These scripts read the initial data from `backend/data/seed.json` and insert it into the respective databases. The MongoDB seed script also clears any existing data in the collections before inserting the new data.
+_These scripts read the initial data from `backend/data/seed.json` and insert it into the respective databases. The MongoDB seed script also clears any existing data in the collections before inserting the new data._
