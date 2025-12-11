@@ -18,6 +18,7 @@ import "./LandingPage.css";
  */
 const LandingPage = () => {
   const { isAuthenticated } = useAuth();
+  console.log(isAuthenticated)
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -74,22 +75,22 @@ const LandingPage = () => {
             Your personal MIT OCW companion. Track progress, take notes, and stay organized
             while learning from world-class courses.
           </p>
-          
-          {!isAuthenticated ? (
-            <div className="hero-actions">
-              <Link to="/login" className="button primary-button">
-                Get Started →
-              </Link>
-              <Link to="/login" className="button secondary-button">
-                Login
-              </Link>
-            </div>
+
+          {isAuthenticated ? (
+              <div className="hero-actions">
+                  <Link to="/dashboard" className="button primary-button">
+                      Get Started →
+                  </Link>
+              </div>
           ) : (
-            <div className="hero-actions">
-              <Link to="/dashboard" className="button primary-button">
-                Go to Dashboard →
-              </Link>
-            </div>
+              <div className="hero-actions">
+                  <Link to="/login" className="button primary-button">
+                      Go to Dashboard →
+                  </Link>
+                  <Link to="/login" className="button secondary-button">
+                      Login
+                  </Link>
+              </div>
           )}
         </div>
       </section>
