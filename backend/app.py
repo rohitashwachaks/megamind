@@ -79,4 +79,4 @@ if __name__ == "__main__":
     port = int(os.getenv("FLASK_PORT", 8000))
     debug = os.getenv("FLASK_ENV", "production") == "development"
     logger.info(f"Starting Flask app on port {port} (debug={debug})")
-    app.run(host="0.0.0.0", port=port, debug=debug)
+    app.run(host="0.0.0.0", port=port, debug=debug, use_reloader=False)

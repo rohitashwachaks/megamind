@@ -87,10 +87,10 @@ export const apiClient = {
   /**
    * Register a new user account.
    */
-  register: (email: string, password: string, displayName?: string) =>
+  register: (email: string, password: string, confirmPassword: string, displayName?: string) =>
     request<{ user: User; token: string }>("/auth/register", {
       method: "POST",
-      body: JSON.stringify({ email, password, displayName })
+      body: JSON.stringify({ email, password, confirmPassword, displayName })
     }),
   /**
    * Login with email and password.

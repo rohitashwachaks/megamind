@@ -26,6 +26,7 @@ def register():
     # Validate input
     email = payload.get("email")
     password = payload.get("password")
+    confirm_password = payload.get("confirmPassword")
     display_name = payload.get("displayName", "")
 
     fields = {}
@@ -33,6 +34,8 @@ def register():
         fields["email"] = "valid email required"
     if not password or not isinstance(password, str) or len(password) < 8:
         fields["password"] = "minimum 8 characters required"
+    if password != confirm_password:
+        fields["confirmPassword"] = "passwords do not match"
 
     if fields:
         return ApiResponse("Invalid registration data", status=400, error=True, code="invalid_fields",

@@ -8,7 +8,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, displayName?: string) => Promise<void>;
+  register: (email: string, password: string, confirmPassword: string, displayName?: string) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -105,9 +105,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
-  const register = useMemo(() => async (email: string, password: string, displayName?: string) => {
+  const register = useMemo(() => async (email: string, password: string, confirmPassword: string, displayName?: string) => {
     try {
-      const response = await apiClient.register(email, password, displayName);
+      const response = await apiClient.register(email, password, confirmPassword, displayName);
       setToken(response.token);
       setUser(response.user);
     } catch (error: any) {

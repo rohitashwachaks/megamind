@@ -1,34 +1,82 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import "./LoginPage.css";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Get the redirect path from location state, or default to dashboard
+  const from = location.state?.from?.pathname || "/dashboard";
+
+  const validateForm = () => {
+    if (!isLogin) {
+      // Registration validation
+      if (password !== confirmPassword) {
+        setError("Passwords do not match");
+        return false;
+      }
+      if (password.length < 8) {
+        setError("Password must be at least 8 characters long");
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    
+    if (!validateForm()) {
+      setIsLoading(false);
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
       if (isLogin) {
         await login(email, password);
       } else {
-        await register(email, password, displayName);
+        await register(email, password, confirmPassword, displayName);
       }
-      navigate("/");
+      navigate(from, { replace: true });
     } catch (err: any) {
       setError(err.message || "Something went wrong");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
+    setError("");
+    setConfirmPassword("");
+  };
+
+  const setLoginMode = () => {
+    if (!isLogin) {
+      setIsLogin(true);
+      setError("");
+      setConfirmPassword("");
+    }
+  };
+
+  const setRegisterMode = () => {
+    if (isLogin) {
+      setIsLogin(false);
+      setError("");
+      setConfirmPassword("");
     }
   };
 
@@ -57,14 +105,14 @@ export default function LoginPage() {
           <div className="tab-buttons">
             <button
               type="button"
-              onClick={() => setIsLogin(true)}
+              onClick={() => setLoginMode()}
               className={`tab-button ${isLogin ? "active" : ""}`}
             >
               Login
             </button>
             <button
               type="button"
-              onClick={() => setIsLogin(false)}
+              onClick={() => setRegisterMode()}
               className={`tab-button ${!isLogin ? "active" : ""}`}
             >
               Register
@@ -113,6 +161,22 @@ export default function LoginPage() {
               )}
             </div>
 
+            {!isLogin && (
+              <div className="form-group">
+                <label htmlFor="confirmPassword">Confirm Password</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  minLength={8}
+                />
+                <p className="helper-text">Re-enter password to confirm</p>
+              </div>
+            )}
+
             {error && (
               <div className="error-message">
                 <p>{error}</p>
@@ -133,7 +197,7 @@ export default function LoginPage() {
               {isLogin ? "Don't have an account? " : "Already have an account? "}
               <button
                 type="button"
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={() => toggleMode()}
                 className="toggle-button"
               >
                 {isLogin ? "Register" : "Login"}
