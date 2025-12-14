@@ -8,6 +8,7 @@ import {
   useReducer
 } from "react";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 import { apiClient, toMessage } from "../api/client";
 import {
     AppState,
@@ -128,6 +129,7 @@ const AppStateContext = createContext<ContextValue | null>(null);
  */
 export const AppStateProvider = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [state, dispatch] = useReducer(reducer, {
     user: null,
     courses: [],
@@ -153,8 +155,14 @@ export const AppStateProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]); // Run only once on initial load
+    // Only fetch data when user is authenticated and auth loading is complete
+    if (isAuthenticated && !authLoading) {
+      refresh();
+    } else if (!authLoading) {
+      // Auth is complete but user is not authenticated, stop loading
+      dispatch({ type: "SET_LOADING", payload: { isLoading: false } });
+    }
+  }, [isAuthenticated, authLoading, refresh]);
 
   /**
    * A wrapper around API calls to handle errors and loading states.

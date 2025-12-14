@@ -88,7 +88,7 @@ export const apiClient = {
    * Register a new user account.
    */
   register: (email: string, password: string, confirmPassword: string, displayName?: string) =>
-    request<{ user: User; token: string }>("/auth/register", {
+    request<{ user: User; token: string }>("/v1/auth/register", {
       method: "POST",
       body: JSON.stringify({ email, password, confirmPassword, displayName })
     }),
@@ -96,19 +96,19 @@ export const apiClient = {
    * Login with email and password.
    */
   login: (email: string, password: string) =>
-    request<{ user: User; token: string }>("/auth/login", {
+    request<{ user: User; token: string }>("/v1/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password })
     }),
   /**
    * Fetches the current user's profile.
    */
-  getCurrentUser: (token?: string | null) => request<User>("/users/me", {}, token),
+  getCurrentUser: (token?: string | null) => request<User>("/v1/users/me", {}, token),
   /**
    * Updates the current user's display name.
    */
   updateProfile: (payload: { displayName: string }, token?: string | null) =>
-    request<User>("/users/me", {
+    request<User>("/v1/users/me", {
       method: "PATCH",
       body: JSON.stringify(payload)
     }, token),
@@ -116,7 +116,7 @@ export const apiClient = {
    * Sets the user's focus course.
    */
   setFocusCourse: (courseId?: string | null, token?: string | null) =>
-    request<User>("/users/me/focus-course", {
+    request<User>("/v1/users/me/focus-course", {
       method: "PATCH",
       body: JSON.stringify({ courseId: courseId ?? null })
     }, token),
@@ -124,20 +124,20 @@ export const apiClient = {
    * Export all user data for backup.
    */
   exportUserData: (token?: string | null) =>
-    request<{ user: User; courses: Course[]; exportedAt: string; version: string }>("/users/me/export", {}, token),
+    request<{ user: User; courses: Course[]; exportedAt: string; version: string }>("/v1/users/me/export", {}, token),
   /**
    * Fetches all courses.
    */
-  getCourses: (token?: string | null) => request<Course[]>("/courses", {}, token),
+  getCourses: (token?: string | null) => request<Course[]>("/v1/courses", {}, token),
   /**
    * Fetches a single course by its ID.
    */
-  getCourse: (courseId: string) => request<Course>(`/courses/${courseId}`),
+  getCourse: (courseId: string) => request<Course>(`/v1/courses/${courseId}`),
   /**
    * Creates a new course.
    */
   createCourse: (payload: NewCoursePayload) =>
-    request<Course>("/courses", {
+    request<Course>("/v1/courses", {
       method: "POST",
       body: JSON.stringify(payload)
     }),
@@ -145,7 +145,7 @@ export const apiClient = {
    * Updates a course.
    */
   updateCourse: (courseId: string, payload: UpdateCoursePayload) =>
-    request<Course>(`/courses/${courseId}`, {
+    request<Course>(`/v1/courses/${courseId}`, {
       method: "PATCH",
       body: JSON.stringify(payload)
     }),
@@ -153,12 +153,12 @@ export const apiClient = {
    * Deletes a course.
    */
   deleteCourse: (courseId: string) =>
-    request<void>(`/courses/${courseId}`, { method: "DELETE" }),
+    request<void>(`/v1/courses/${courseId}`, { method: "DELETE" }),
   /**
    * Creates a new lecture for a course.
    */
   createLecture: (courseId: string, payload: NewLecturePayload) =>
-    request<Lecture>(`/courses/${courseId}/lectures`, {
+    request<Lecture>(`/v1/courses/${courseId}/lectures`, {
       method: "POST",
       body: JSON.stringify(payload)
     }),
@@ -166,7 +166,7 @@ export const apiClient = {
    * Updates a lecture.
    */
   updateLecture: (courseId: string, lectureId: string, payload: UpdateLecturePayload) =>
-    request<Lecture>(`/courses/${courseId}/lectures/${lectureId}`, {
+    request<Lecture>(`/v1/courses/${courseId}/lectures/${lectureId}`, {
       method: "PATCH",
       body: JSON.stringify(payload)
     }),
@@ -174,12 +174,12 @@ export const apiClient = {
    * Deletes a lecture.
    */
   deleteLecture: (courseId: string, lectureId: string) =>
-    request<void>(`/courses/${courseId}/lectures/${lectureId}`, { method: "DELETE" }),
+    request<void>(`/v1/courses/${courseId}/lectures/${lectureId}`, { method: "DELETE" }),
   /**
    * Creates a new assignment for a course.
    */
   createAssignment: (courseId: string, payload: NewAssignmentPayload) =>
-    request<Assignment>(`/courses/${courseId}/assignments`, {
+    request<Assignment>(`/v1/courses/${courseId}/assignments`, {
       method: "POST",
       body: JSON.stringify(payload)
     }),
@@ -191,7 +191,7 @@ export const apiClient = {
     assignmentId: string,
     payload: UpdateAssignmentPayload
   ) =>
-    request<Assignment>(`/courses/${courseId}/assignments/${assignmentId}`, {
+    request<Assignment>(`/v1/courses/${courseId}/assignments/${assignmentId}`, {
       method: "PATCH",
       body: JSON.stringify(payload)
     }),
@@ -199,7 +199,7 @@ export const apiClient = {
    * Deletes an assignment.
    */
   deleteAssignment: (courseId: string, assignmentId: string) =>
-    request<void>(`/courses/${courseId}/assignments/${assignmentId}`, {
+    request<void>(`/v1/courses/${courseId}/assignments/${assignmentId}`, {
       method: "DELETE"
     })
 };
