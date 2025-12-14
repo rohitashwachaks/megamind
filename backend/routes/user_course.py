@@ -9,9 +9,9 @@ import logging
 import uuid
 from flask import g, Blueprint
 
-from ..auth import token_required
-from ..contracts.api_response import ApiResponse
-from ..common.utils import now_iso, parse_json, sanitize_html
+from backend.settings.auth import token_required
+from backend.contracts.api_response import ApiResponse
+from backend.common.utils import now_iso, parse_json, sanitize_html
 
 user_course_blueprint = Blueprint("user_course_routes", __name__)
 user_course_logger = logging.getLogger("user_course_routes")

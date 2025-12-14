@@ -14,11 +14,12 @@ from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-from common.utils import parse_json, now_iso, sanitize_text
-from db.factory import get_db_connector
-from contracts.api_response import ApiResponse
+from backend.common.utils import parse_json, now_iso, sanitize_text
+from backend.db.factory import get_db_connector
+from backend.contracts.api_response import ApiResponse
 
-from .routes.home import api_v1
+from backend.extensions import limiter
+from backend.routes.home import api_v1
 
 # Load environment variables
 load_dotenv()
@@ -38,13 +39,8 @@ CORS(app, resources={r"/api/*": {"origins": cors_origins}})
 
 logger.info(f"CORS configured for origins: {cors_origins}")
 
-# Configure rate limiting
-limiter = Limiter(
-    app=app,
-    key_func=get_remote_address,
-    default_limits=[os.getenv("RATE_LIMIT", "200 per day, 50 per hour")],
-    storage_uri=os.getenv("RATE_LIMIT_STORAGE", "memory://")
-)
+# Initialize rate limiter with app
+limiter.init_app(app)
 
 logger.info("Rate limiting configured")
 

@@ -5,5 +5,4 @@
 # Python
 # python3 -m venv .venv && source .venv/bin/activate
 # pip install -r backend/requirements.txt
-cd backend
-python app.py  # serves http://localhost:8000/api/v1
+python -m backend.app  # serves http://localhost:8000/api/v1

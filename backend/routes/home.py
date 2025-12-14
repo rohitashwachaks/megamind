@@ -1,10 +1,10 @@
 from flask import Blueprint
 
-from .authentication import auth_blueprint
-from .courses import courses_blueprint
-from .user_course import user_course_blueprint
-from .users import users_blueprint
-from ..contracts.api_response import ApiResponse
+from backend.routes.authentication import auth_blueprint
+from backend.routes.courses import courses_blueprint
+from backend.routes.user_course import user_course_blueprint
+from backend.routes.users import users_blueprint
+from backend.contracts.api_response import ApiResponse
 
 api_v1 = Blueprint("api_v1_routes", __name__)
 

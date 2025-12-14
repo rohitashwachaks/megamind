@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional
 
 from pymongo import MongoClient, ReturnDocument
 
-from .base import DatabaseConnector
+from backend.db.base import DatabaseConnector
 
 
 class MongoConnector(DatabaseConnector):

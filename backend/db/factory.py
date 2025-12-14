@@ -1,10 +1,10 @@
 from typing import Dict
 
-from .base import DatabaseConnector
+from backend.db.base import DatabaseConnector
 
 # Import your concrete implementations here
-from .sql import SqlConnector
-from .mongo import MongoConnector
+from backend.db.sql import SqlConnector
+from backend.db.mongo import MongoConnector
 
 
 _connectors: Dict[str, DatabaseConnector] = {

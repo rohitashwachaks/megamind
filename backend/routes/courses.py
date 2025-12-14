@@ -16,11 +16,12 @@
 # - PATCH /courses/<id>/assignments/<aid>/user-data - Update user-specific assignment data
 # =============================================================================
 import logging
+from typing import Dict, Any, Optional
 from flask import g, Blueprint
 
-from ..auth import optional_token
-from ..common.utils import sanitize_html, sanitize_text, parse_json, get_course
-from ..contracts.api_response import ApiResponse
+from backend.settings.auth import optional_token
+from backend.common.utils import sanitize_html, sanitize_text, parse_json, get_course
+from backend.contracts.api_response import ApiResponse
 
 courses_blueprint = Blueprint("courses", __name__)
 courses_logger = logging.getLogger("courses")

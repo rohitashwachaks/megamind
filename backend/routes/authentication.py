@@ -6,10 +6,10 @@ import uuid
 
 from flask import Blueprint, g
 
-from ..app import limiter
-from ..common.utils import parse_json, now_iso, sanitize_text
-from ..contracts.api_response import ApiResponse
-from ..settings.auth import verify_password, hash_password, generate_token
+from backend.extensions import limiter
+from backend.common.utils import parse_json, now_iso, sanitize_text
+from backend.contracts.api_response import ApiResponse
+from backend.settings.auth import verify_password, hash_password, generate_token
 
 auth_blueprint = Blueprint("auth", __name__)
 auth_logger = logging.getLogger("auth")

@@ -8,8 +8,8 @@ from typing import Optional
 
 from flask import g, Blueprint
 
-from ..settings.auth import token_required
-from ..contracts.api_response import ApiResponse
+from backend.settings.auth import token_required
+from backend.contracts.api_response import ApiResponse
 
 from backend.common.utils import parse_json, sanitize_text, now_iso
 
